@@ -1,2 +1,27 @@
-export default function LevelCard({ title, level }) { if(!level)return null; return <section className='level-card panel'><div className='eyebrow'>{title}</div><div className='blind-split'><div className='blind-column'><div className='blind-label-small'>Small Blind</div><div className='blind-number'>{level.sb}</div></div><div className='blind-divider'>/</div><div className='blind-column'><div className='blind-label-small'>Big Blind</div><div className='blind-number'>{level.bb}</div></div></div><div className='muted duration-text'>Varighet: {level.duration} min</div></section>; }
+export default function LevelCard({ title, level }) {
+  if (!level) return null;
 
+  return (
+    <section className="level-card panel">
+      <div className="eyebrow">{title}</div>
+
+      <div className="blind-split">
+        <div className="blind-column">
+          <div className="blind-label-small">Small Blind</div>
+          <div className="blind-number">{level.sb}</div>
+        </div>
+
+        <div className="blind-divider">/</div>
+
+        <div className="blind-column">
+          <div className="blind-label-small">Big Blind</div>
+          <div className="blind-number">{level.bb}</div>
+        </div>
+      </div>
+
+      <div className="muted duration-text">
+        Varighet: {level.duration} min
+      </div>
+    </section>
+  );
+}

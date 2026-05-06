@@ -21,6 +21,12 @@ export function normalizeBlindLevels(blindLevels) {
   return blindLevels.map((entry, index) => {
     const bb = Number(entry.bb) || 20;
     const duration = Number(entry.duration) || 15;
-    return { level: index + 1, duration, bb, sb: Math.max(1, Math.floor(bb / 2)) };
+
+    return {
+      level: index + 1,
+      duration,
+      bb,
+      sb: Math.max(1, Math.floor(bb / 2)),
+    };
   });
 }

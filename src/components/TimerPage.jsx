@@ -133,7 +133,7 @@ export default function TimerPage({
       </div>
 
       <img
-        src="/chips1.png"
+        src={`${import.meta.env.BASE_URL}chips1.png`}
         alt="Chips"
         className="chips-hero"
         onError={(event) => {

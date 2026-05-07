@@ -5,6 +5,23 @@ import {
   subscribeToFirebaseRoom,
 } from './firebaseRoomStorage.js';
 
+function getSyncSignature(tournamentState) {
+  if (!tournamentState) return '';
+
+  // timeRemainingSec endres hvert tick lokalt på hver enhet.
+  // Hvis vi publiserer den til Firebase hele tiden, kan PC-en overskrive
+  // mobil/iPad-endringer som chips, fold, all-in og level-klikk.
+  //
+  // Derfor utelater vi timeRemainingSec fra signaturen.
+  // Selve timeren synkes fortsatt via timerRunning + levelEndsAt.
+  const {
+    timeRemainingSec,
+    ...stateWithoutLocalTick
+  } = tournamentState;
+
+  return JSON.stringify(stateWithoutLocalTick);
+}
+
 export function useFirebaseRoomSync({
   enabled,
   roomId,
@@ -15,6 +32,12 @@ export function useFirebaseRoomSync({
   const clientIdRef = useRef(getClientId());
   const applyingRemoteRef = useRef(false);
   const publishTimerRef = useRef(null);
+  const latestTournamentStateRef = useRef(tournamentState);
+  const lastPublishedSignatureRef = useRef('');
+
+  useEffect(() => {
+    latestTournamentStateRef.current = tournamentState;
+  }, [tournamentState]);
 
   useEffect(() => {
     if (!enabled || !roomId) {
@@ -32,11 +55,21 @@ export function useFirebaseRoomSync({
 
       setSyncStatus('connected');
 
-      if (remoteRoom.clientId === clientIdRef.current) {
+      const localHasTournament = Boolean(
+        latestTournamentStateRef.current?.players?.length,
+      );
+
+      const remoteIsFromThisClient = remoteRoom.clientId === clientIdRef.current;
+
+      // Normalt ignorerer vi egne meldinger for å unngå loops.
+      // Men ved testing i samme browser/StackBlitz-preview kan "iPad" og PC
+      // ha samme clientId. Hvis lokal state er tom, må vi likevel hente rommet.
+      if (remoteIsFromThisClient && localHasTournament) {
         return;
       }
 
       applyingRemoteRef.current = true;
+      lastPublishedSignatureRef.current = getSyncSignature(remoteRoom.tournamentState);
       setTournamentState(remoteRoom.tournamentState);
 
       window.setTimeout(() => {
@@ -50,13 +83,24 @@ export function useFirebaseRoomSync({
   }, [enabled, roomId, setTournamentState]);
 
   useEffect(() => {
-    if (!enabled || !roomId) return;
-    if (applyingRemoteRef.current) return;
-    if (!tournamentState?.players?.length) return;
+    if (!enabled || !roomId) return undefined;
+    if (applyingRemoteRef.current) return undefined;
+    if (!tournamentState?.players?.length) return undefined;
+
+    const nextSignature = getSyncSignature(tournamentState);
+
+    // Ikke publiser rene lokale timer-ticks.
+    // Publiser kun når noe "ekte" har endret seg:
+    // start/pause, level, players, pot, chips, handState, osv.
+    if (nextSignature === lastPublishedSignatureRef.current) {
+      return undefined;
+    }
 
     window.clearTimeout(publishTimerRef.current);
 
     publishTimerRef.current = window.setTimeout(() => {
+      lastPublishedSignatureRef.current = nextSignature;
+
       publishFirebaseRoomState({
         roomId,
         clientId: clientIdRef.current,

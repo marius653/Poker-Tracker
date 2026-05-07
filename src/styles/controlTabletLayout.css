@@ -366,3 +366,90 @@
   padding: 5px 6px;
   font-size: 0.64rem;
 }
+/* ================================
+   iPad Air 2: larger chips in 3 + 2 layout
+
+   Gir chipene to rader per spillerkort:
+   10 / 20 / 50
+   100 / 500
+================================ */
+
+.control-page-tablet-priority .round-chip-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  align-content: start;
+}
+
+.control-page-tablet-priority .round-player-card {
+  padding: 7px;
+  border-radius: 10px;
+}
+
+.control-page-tablet-priority .round-player-head {
+  margin-bottom: 4px;
+  gap: 4px;
+}
+
+.control-page-tablet-priority .round-player-name {
+  font-size: 0.8rem;
+}
+
+.control-page-tablet-priority .round-player-meta,
+.control-page-tablet-priority .round-player-stack {
+  font-size: 0.62rem;
+}
+
+.control-page-tablet-priority .chip-row {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  gap: 5px 6px;
+  align-items: center;
+  justify-content: start;
+}
+
+.control-page-tablet-priority .chip-control {
+  grid-template-columns: 22px 40px 22px;
+  gap: 3px;
+}
+
+.control-page-tablet-priority .chip-minus-btn,
+.control-page-tablet-priority .chip-plus-btn {
+  width: 22px;
+  height: 31px;
+  border-radius: 7px;
+  font-size: 0.82rem;
+}
+
+.control-page-tablet-priority .chip-btn {
+  width: 40px;
+  height: 40px;
+  border-width: 2px;
+  font-size: 0.68rem;
+}
+
+.control-page-tablet-priority .chip-count {
+  min-width: 15px;
+  height: 15px;
+  font-size: 0.54rem;
+  top: -4px;
+  right: -2px;
+  padding: 0 4px;
+}
+
+.control-page-tablet-priority .round-player-summary {
+  margin-top: 5px;
+  gap: 4px;
+  font-size: 0.62rem;
+}
+
+.control-page-tablet-priority .round-player-controls {
+  margin-top: 4px;
+  gap: 4px;
+}
+
+.control-page-tablet-priority .inline-check {
+  padding: 4px 6px;
+  border-radius: 7px;
+  font-size: 0.62rem;
+  gap: 5px;
+}

@@ -7,6 +7,7 @@ export function useDisplaySettings() {
   const [displaySettings, setDisplaySettings] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
       return {
         ...createDisplaySettingsDefaults(),
         ...saved,
@@ -24,6 +25,7 @@ export function useDisplaySettings() {
       '--position-scale': displaySettings.positionScale,
       '--setup-scale': displaySettings.setupScale,
       '--button-scale': displaySettings.buttonScale,
+      '--hand-rankings-scale': displaySettings.handRankingsScale,
     };
 
     Object.entries(cssVariables).forEach(([name, value]) => {

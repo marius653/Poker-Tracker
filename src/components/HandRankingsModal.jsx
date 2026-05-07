@@ -1,4 +1,5 @@
 import { HAND_RANKINGS } from '../state/pokerConstants.js';
+import '../styles/handRankingsScale.css';
 
 export default function HandRankingsModal({ isOpen, onClose }) {
   if (!isOpen) return null;

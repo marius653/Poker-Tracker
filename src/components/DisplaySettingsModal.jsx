@@ -40,6 +40,14 @@ const SETTINGS = [
     step: 0.01,
   },
   {
+    key: 'handRankingsScale',
+    title: 'Hand rankings',
+    help: 'Størrelse på poker hand rankings-vinduet og kortene.',
+    min: 0.75,
+    max: 1.35,
+    step: 0.01,
+  },
+  {
     key: 'setupScale',
     title: 'Setup',
     help: 'Størrelse på setup-skjermen.',

@@ -1,0 +1,85 @@
+/* ================================
+   Hand rankings scaling
+================================ */
+
+.hand-rankings-modal {
+  width: min(
+    calc(1550px * var(--hand-rankings-scale, 1)),
+    98vw
+  );
+  padding: calc(34px * var(--hand-rankings-scale, 1));
+}
+
+.hand-rankings-head {
+  gap: calc(24px * var(--hand-rankings-scale, 1));
+  margin-bottom: calc(28px * var(--hand-rankings-scale, 1));
+}
+
+.hand-rankings-head h2 {
+  font-size: clamp(
+    calc(1.65rem * var(--hand-rankings-scale, 1)),
+    calc(2.4vw * var(--hand-rankings-scale, 1)),
+    calc(3.2rem * var(--hand-rankings-scale, 1))
+  );
+}
+
+.hand-rankings-grid {
+  gap: calc(20px * var(--hand-rankings-scale, 1));
+}
+
+.hand-rank-card {
+  grid-template-columns:
+    calc(74px * var(--hand-rankings-scale, 1))
+    1fr
+    auto;
+  gap: calc(20px * var(--hand-rankings-scale, 1));
+  padding: calc(22px * var(--hand-rankings-scale, 1));
+  border-radius: calc(20px * var(--hand-rankings-scale, 1));
+}
+
+.hand-rank-number {
+  width: calc(58px * var(--hand-rankings-scale, 1));
+  height: calc(58px * var(--hand-rankings-scale, 1));
+  font-size: calc(1.35rem * var(--hand-rankings-scale, 1));
+}
+
+.hand-rank-title {
+  font-size: clamp(
+    calc(1.05rem * var(--hand-rankings-scale, 1)),
+    calc(1.4vw * var(--hand-rankings-scale, 1)),
+    calc(1.85rem * var(--hand-rankings-scale, 1))
+  );
+  margin-bottom: calc(8px * var(--hand-rankings-scale, 1));
+}
+
+.hand-rank-desc {
+  font-size: clamp(
+    calc(0.88rem * var(--hand-rankings-scale, 1)),
+    calc(1vw * var(--hand-rankings-scale, 1)),
+    calc(1.25rem * var(--hand-rankings-scale, 1))
+  );
+}
+
+.playing-cards {
+  gap: calc(8px * var(--hand-rankings-scale, 1));
+  min-width: calc(282px * var(--hand-rankings-scale, 1));
+}
+
+.mini-card {
+  width: calc(50px * var(--hand-rankings-scale, 1));
+  height: calc(70px * var(--hand-rankings-scale, 1));
+  border-radius: calc(9px * var(--hand-rankings-scale, 1));
+  font-size: calc(1.25rem * var(--hand-rankings-scale, 1));
+}
+
+@media (max-width: 1100px) {
+  .hand-rank-card {
+    grid-template-columns:
+      calc(64px * var(--hand-rankings-scale, 1))
+      1fr;
+  }
+
+  .playing-cards {
+    min-width: 0;
+  }
+}

@@ -23,5 +23,6 @@ export function createDisplaySettingsDefaults() {
     positionScale: 1.16,
     setupScale: 1.08,
     buttonScale: 1.12,
+    handRankingsScale: 1,
   };
 }

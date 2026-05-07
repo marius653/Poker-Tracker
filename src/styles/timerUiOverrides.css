@@ -1,0 +1,21 @@
+/* ================================
+   Timer UI overrides
+================================ */
+
+/*
+  Låser den runde start/pause-knappen relativt til LEVEL-teksten
+  i timeren, ikke relativt til toppen av ringen.
+
+  LEVEL-teksten ligger på top: 18%.
+  Knappen plasseres 30px over den og flytter seg derfor med timeren
+  når ringen skaleres.
+*/
+
+.timer-inner-play {
+  top: calc(30% - 10px);
+  transform: translate(-50%, -100%);
+}
+
+.timer-inner-play:hover {
+  transform: translate(-50%, -100%) translateY(-1px);
+}

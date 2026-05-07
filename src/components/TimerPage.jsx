@@ -11,6 +11,7 @@ import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
 import { changeLevel, saveEditedStacks, toggleTimer } from '../state/actions.js';
 import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
+import '../styles/timerUiOverrides.css';
 
 export default function TimerPage({
   roomId,
@@ -77,6 +78,9 @@ export default function TimerPage({
           <button type="button" className="btn btn-gray" onClick={() => handleChangeLevel(1)}>
             Level &rarr;
           </button>
+          <button type="button" className="btn btn-gray" onClick={() => setHandRankingsOpen(true)}>
+            Hand rankings
+          </button>
         </div>
 
         <div className="button-cluster">
@@ -85,17 +89,8 @@ export default function TimerPage({
         </div>
 
         <div className="button-cluster">
-          <button type="button" className="btn btn-gray" onClick={() => setRoundPanelOpen(true)}>
-            Rundevindu
-          </button>
-          <button type="button" className="btn btn-gray" onClick={onOpenRoundPage}>
-            Rundeside
-          </button>
           <button type="button" className="btn btn-gray" onClick={onOpenControlPage}>
-            Kontrollside
-          </button>
-          <button type="button" className="btn btn-gray" onClick={() => setHandRankingsOpen(true)}>
-            Hand rankings
+            Kontrollpanel
           </button>
           <button type="button" className="btn btn-gray" onClick={() => setDisplaySettingsOpen(true)}>
             Skjerm

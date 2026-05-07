@@ -24,6 +24,6 @@ export function createDisplaySettingsDefaults() {
     setupScale: 1.08,
     buttonScale: 1.12,
     handRankingsScale: 1,
-    controlPanelScale: 1,
+    controlPanelScale: 0.84,
   };
 }

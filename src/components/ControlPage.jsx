@@ -1,3 +1,4 @@
+import FullscreenButton from './FullscreenButton.jsx';
 import RoomBadge from './RoomBadge.jsx';
 import RoundPanelContent from './RoundPanelContent.jsx';
 import RoundPanelErrorBoundary from './RoundPanelErrorBoundary.jsx';
@@ -36,78 +37,82 @@ export default function ControlPage({
 
   return (
     <div className="control-page control-page-tablet-priority">
-      <section className="control-hero panel">
-        <div className="control-level-pill">
-          LEVEL {currentLevel?.level}
-        </div>
-
-        <div className="control-time">
-          {formatTime(tournamentState.timeRemainingSec)}
-        </div>
-
-        <div className="control-blinds">
-          <div>
-            <span>SB</span>
-            <strong>{currentLevel?.sb}</strong>
+      <div className="control-left-column">
+        <section className="control-hero panel">
+          <div className="control-level-pill">
+            LEVEL {currentLevel?.level}
           </div>
-          <div className="control-blind-divider">/</div>
-          <div>
-            <span>BB</span>
-            <strong>{currentLevel?.bb}</strong>
+
+          <div className="control-time">
+            {formatTime(tournamentState.timeRemainingSec)}
           </div>
-        </div>
 
-        <div className="control-next-level">
-          Neste: {nextLevel?.sb}/{nextLevel?.bb} · {nextLevel?.duration} min
-        </div>
-
-        <div className="control-main-actions">
-          <button
-            type="button"
-            className={`btn control-big-btn ${tournamentState.timerRunning ? 'btn-green' : 'btn-blue'}`}
-            onClick={handleToggleTimer}
-          >
-            {tournamentState.timerRunning ? 'Pause' : 'Start'}
-          </button>
-        </div>
-
-        <div className="control-level-actions">
-          <button type="button" className="btn btn-gray control-wide-btn" onClick={() => handleChangeLevel(-1)}>
-            &larr; Level ned
-          </button>
-          <button type="button" className="btn btn-gray control-wide-btn" onClick={() => handleChangeLevel(1)}>
-            Level opp &rarr;
-          </button>
-        </div>
-      </section>
-
-      <section className="control-status-grid">
-        <div className="control-status-card panel">
-          <div className="control-status-label">Pot</div>
-          <div className="control-status-value">{tournamentState.currentPot}</div>
-        </div>
-
-        <div className="control-status-card panel">
-          <div className="control-status-label">Runde</div>
-          <div className="control-status-value">{tournamentState.roundNumber}</div>
-        </div>
-
-        <div className="control-status-card panel">
-          <div className="control-status-label">Spillere</div>
-          <div className="control-status-value">
-            {tournamentState.players.filter((player) => !player.eliminated).length}
+          <div className="control-blinds">
+            <div>
+              <span>SB</span>
+              <strong>{currentLevel?.sb}</strong>
+            </div>
+            <div className="control-blind-divider">/</div>
+            <div>
+              <span>BB</span>
+              <strong>{currentLevel?.bb}</strong>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <div className="control-side-actions">
-        <button type="button" className="btn btn-gray control-nav-btn" onClick={onBackToTimer}>
-          &larr; Timer
-        </button>
+          <div className="control-next-level">
+            Neste: {nextLevel?.sb}/{nextLevel?.bb} · {nextLevel?.duration} min
+          </div>
 
-        <div className="control-side-room">
-          <RoomBadge roomId={roomId} />
-          <SyncStatusBadge status={syncStatus} />
+          <div className="control-main-actions">
+            <button
+              type="button"
+              className={`btn control-big-btn ${tournamentState.timerRunning ? 'btn-green' : 'btn-blue'}`}
+              onClick={handleToggleTimer}
+            >
+              {tournamentState.timerRunning ? 'Pause' : 'Start'}
+            </button>
+          </div>
+
+          <div className="control-level-actions">
+            <button type="button" className="btn btn-gray control-wide-btn" onClick={() => handleChangeLevel(-1)}>
+              &larr; Level ned
+            </button>
+            <button type="button" className="btn btn-gray control-wide-btn" onClick={() => handleChangeLevel(1)}>
+              Level opp &rarr;
+            </button>
+          </div>
+        </section>
+
+        <section className="control-status-grid">
+          <div className="control-status-card panel">
+            <div className="control-status-label">Pot</div>
+            <div className="control-status-value">{tournamentState.currentPot}</div>
+          </div>
+
+          <div className="control-status-card panel">
+            <div className="control-status-label">Runde</div>
+            <div className="control-status-value">{tournamentState.roundNumber}</div>
+          </div>
+
+          <div className="control-status-card panel">
+            <div className="control-status-label">Spillere</div>
+            <div className="control-status-value">
+              {tournamentState.players.filter((player) => !player.eliminated).length}
+            </div>
+          </div>
+        </section>
+
+        <div className="control-side-actions">
+          <button type="button" className="btn btn-gray control-nav-btn" onClick={onBackToTimer}>
+            &larr; Timer
+          </button>
+
+          <FullscreenButton />
+
+          <div className="control-side-room">
+            <RoomBadge roomId={roomId} />
+            <SyncStatusBadge status={syncStatus} />
+          </div>
         </div>
       </div>
 
@@ -122,16 +127,18 @@ export default function ControlPage({
         />
       </section>
 
-      <section className="control-round-panel panel">
-        <RoundPanelErrorBoundary>
-          <RoundPanelContent
-            tournamentState={tournamentState}
-            setTournamentState={setTournamentState}
-            onClose={onBackToTimer}
-            variant="control"
-          />
-        </RoundPanelErrorBoundary>
-      </section>
+      <div className="control-right-column">
+        <section className="control-round-panel panel">
+          <RoundPanelErrorBoundary>
+            <RoundPanelContent
+              tournamentState={tournamentState}
+              setTournamentState={setTournamentState}
+              onClose={onBackToTimer}
+              variant="control"
+            />
+          </RoundPanelErrorBoundary>
+        </section>
+      </div>
     </div>
   );
 }

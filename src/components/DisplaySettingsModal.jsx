@@ -1,5 +1,3 @@
-import '../styles/controlPanelScale.css';
-
 const SETTINGS = [
   {
     key: 'timerScale',
@@ -51,8 +49,8 @@ const SETTINGS = [
   },
   {
     key: 'controlPanelScale',
-    title: 'Kontrollkort',
-    help: 'Størrelse på spillerkort og chip-knapper i kontrollpanelet. Kortene legger seg på ny rad ved behov.',
+    title: 'Kontrollpanel',
+    help: 'Skalerer hele kontrollpanelet på tablet.',
     min: 0.8,
     max: 2,
     step: 0.01,

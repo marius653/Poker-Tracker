@@ -200,8 +200,14 @@ export default function RoundPanelContent({
         />
       )}
 
-      <div className="round-panel-footer">
-        <div className="round-footer-left">
+      <div className={`round-panel-footer ${isControlVariant ? 'round-panel-footer-control' : ''}`}>
+        {isControlVariant && (
+          <div className="round-footer-streets">
+            {streetTabs}
+          </div>
+        )}
+
+        <div className="round-footer-actions">
           <button
             type="button"
             className="btn btn-gray"
@@ -218,11 +224,11 @@ export default function RoundPanelContent({
                 ? 'Neste'
                 : 'Avslutt runde'}
           </button>
-        </div>
 
-        <button type="button" className="btn btn-primary" onClick={handleResetRound}>
-          Reset runde
-        </button>
+          <button type="button" className="btn btn-primary" onClick={handleResetRound}>
+            Reset runde
+          </button>
+        </div>
       </div>
     </div>
   );

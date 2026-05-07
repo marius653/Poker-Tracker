@@ -47,8 +47,9 @@ body {
   font-family: Inter, Arial, Helvetica, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.06), transparent 34%),
-    linear-gradient(135deg, #242830, #15171c);
+    linear-gradient(rgba(12, 14, 18, 0.78), rgba(12, 14, 18, 0.85)),
+    url('/bakgrunn.png') center / cover no-repeat fixed,
+    var(--bg);
 }
 
 button,
@@ -544,7 +545,7 @@ td input {
 
   position: absolute;
   left: 50%;
-  top: -10%;
+  top: 20%;
   transform: translateX(-50%);
   z-index: 5;
 

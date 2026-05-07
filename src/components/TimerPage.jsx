@@ -3,6 +3,7 @@ import DisplaySettingsModal from './DisplaySettingsModal.jsx';
 import HandRankingsModal from './HandRankingsModal.jsx';
 import LevelCard from './LevelCard.jsx';
 import PositionBoard from './PositionBoard.jsx';
+import RoundPanel from './RoundPanel.jsx';
 import StackModal from './StackModal.jsx';
 import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
@@ -18,6 +19,7 @@ export default function TimerPage({
   const [stackModalOpen, setStackModalOpen] = useState(false);
   const [handRankingsOpen, setHandRankingsOpen] = useState(false);
   const [displaySettingsOpen, setDisplaySettingsOpen] = useState(false);
+  const [roundPanelOpen, setRoundPanelOpen] = useState(false);
 
   const {
     displaySettings,
@@ -34,6 +36,7 @@ export default function TimerPage({
         setStackModalOpen(false);
         setHandRankingsOpen(false);
         setDisplaySettingsOpen(false);
+        setRoundPanelOpen(false);
       }
     }
 
@@ -69,6 +72,9 @@ export default function TimerPage({
         </div>
 
         <div className="button-cluster">
+          <button type="button" className="btn btn-gray" onClick={() => setRoundPanelOpen(true)}>
+            Åpne rundevindu
+          </button>
           <button type="button" className="btn btn-gray" onClick={() => setHandRankingsOpen(true)}>
             Hand rankings
           </button>
@@ -111,6 +117,13 @@ export default function TimerPage({
       />
 
       <PositionBoard tournamentState={tournamentState} />
+
+      <RoundPanel
+        isOpen={roundPanelOpen}
+        tournamentState={tournamentState}
+        setTournamentState={setTournamentState}
+        onClose={() => setRoundPanelOpen(false)}
+      />
 
       <StackModal
         isOpen={stackModalOpen}

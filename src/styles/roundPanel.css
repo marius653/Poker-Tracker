@@ -1,11 +1,48 @@
 /* ================================
-   Round panel
+   Round panel / round page
 ================================ */
 
 .round-panel-modal {
   width: min(1500px, 98vw);
   max-height: 94vh;
   overflow: auto;
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(31, 35, 42, 0.98), rgba(18, 21, 27, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  box-shadow: 0 30px 82px rgba(0, 0, 0, 0.62);
+}
+
+.round-panel-inner {
+  width: 100%;
+}
+
+.round-page {
+  width: min(1500px, 100%);
+  min-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.round-page-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.round-page-title {
+  color: var(--muted);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.round-page-panel {
+  width: 100%;
   padding: 24px;
   background:
     linear-gradient(135deg, rgba(31, 35, 42, 0.98), rgba(18, 21, 27, 0.98));

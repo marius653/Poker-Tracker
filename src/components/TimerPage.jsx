@@ -15,6 +15,7 @@ export default function TimerPage({
   setTournamentState,
   onReset,
   onLevelChangeSound,
+  onOpenRoundPage,
 }) {
   const [stackModalOpen, setStackModalOpen] = useState(false);
   const [handRankingsOpen, setHandRankingsOpen] = useState(false);
@@ -73,7 +74,10 @@ export default function TimerPage({
 
         <div className="button-cluster">
           <button type="button" className="btn btn-gray" onClick={() => setRoundPanelOpen(true)}>
-            Åpne rundevindu
+            Rundevindu
+          </button>
+          <button type="button" className="btn btn-gray" onClick={onOpenRoundPage}>
+            Rundeside
           </button>
           <button type="button" className="btn btn-gray" onClick={() => setHandRankingsOpen(true)}>
             Hand rankings

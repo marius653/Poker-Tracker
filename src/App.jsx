@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import RoundPage from './components/RoundPage.jsx';
 import SetupPage from './components/SetupPage.jsx';
 import TimerPage from './components/TimerPage.jsx';
 import { useLevelSound } from './hooks/useLevelSound.js';
@@ -11,10 +12,11 @@ export default function App() {
   const [tournamentState, setTournamentState] = useState(createInitialTournamentState);
   const { playLevelUpSound, primeLevelUpSound } = useLevelSound('/levelup.wav');
 
-  useWakeLock(page === 'timer');
+  const tournamentIsActive = page === 'timer' || page === 'round';
+  useWakeLock(tournamentIsActive);
 
   useEffect(() => {
-    if (page !== 'timer') return undefined;
+    if (!tournamentIsActive) return undefined;
 
     const intervalId = window.setInterval(() => {
       setTournamentState((currentState) => {
@@ -29,7 +31,7 @@ export default function App() {
     }, 250);
 
     return () => window.clearInterval(intervalId);
-  }, [page, playLevelUpSound]);
+  }, [tournamentIsActive, playLevelUpSound]);
 
   function handleStartTournament(setupData) {
     const nextState = startTournamentFromSetup({
@@ -47,6 +49,18 @@ export default function App() {
     setPage('setup');
   }
 
+  if (page === 'round') {
+    return (
+      <main className="app-shell">
+        <RoundPage
+          tournamentState={tournamentState}
+          setTournamentState={setTournamentState}
+          onBackToTimer={() => setPage('timer')}
+        />
+      </main>
+    );
+  }
+
   if (page === 'timer') {
     return (
       <main className="app-shell">
@@ -55,6 +69,7 @@ export default function App() {
           setTournamentState={setTournamentState}
           onReset={handleReset}
           onLevelChangeSound={playLevelUpSound}
+          onOpenRoundPage={() => setPage('round')}
         />
       </main>
     );

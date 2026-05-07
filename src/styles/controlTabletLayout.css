@@ -408,8 +408,8 @@
 }
 
 .control-page-tablet-priority .chip-control {
-  grid-template-columns: 22px 40px 22px;
-  gap: 3px;
+  grid-template-columns: 26px 48px 26px;
+  gap: 5px;
 }
 
 .control-page-tablet-priority .chip-minus-btn,
@@ -421,8 +421,8 @@
 }
 
 .control-page-tablet-priority .chip-btn {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-width: 2px;
   font-size: 0.68rem;
 }

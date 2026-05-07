@@ -26,20 +26,24 @@ export default function RoundPanelContent({
   setTournamentState,
   onClose,
   headerAction = null,
+  variant = 'default',
 }) {
   const handState = tournamentState.handState;
+  const isControlVariant = variant === 'control';
 
   if (!handState) {
     return (
       <div className="round-panel-inner">
-        <div className="round-panel-head">
-          <div>
-            <h2>Rundevindu</h2>
-            <p className="round-small-note">Ingen aktiv runde.</p>
-          </div>
+        {!isControlVariant && (
+          <div className="round-panel-head">
+            <div>
+              <h2>Rundevindu</h2>
+              <p className="round-small-note">Ingen aktiv runde.</p>
+            </div>
 
-          {headerAction}
-        </div>
+            {headerAction}
+          </div>
+        )}
       </div>
     );
   }
@@ -128,44 +132,65 @@ export default function RoundPanelContent({
   }
 
   return (
-    <div className="round-panel-inner">
-      <div className="round-panel-head">
-        <div>
-          <h2>Rundevindu</h2>
-          <p className="round-small-note">
-            Blinds legges automatisk på preflop ved ny runde.
-            Trykk chip/pluss for å legge til. Minus trekker fra.
-          </p>
-        </div>
+    <div className={`round-panel-inner ${isControlVariant ? 'round-panel-inner-control' : ''}`}>
+      {!isControlVariant && (
+        <div className="round-panel-head">
+          <div>
+            <h2>Rundevindu</h2>
+            <p className="round-small-note">
+              Blinds legges automatisk på preflop ved ny runde.
+              Trykk chip/pluss for å legge til. Minus trekker fra.
+            </p>
+          </div>
 
-        <div className="round-panel-status">
-          <div className="round-stage-title">{stageTitle}</div>
-          <div className="round-small-note">
-            Total pot: {formatNumber(tournamentState.currentPot)}
+          <div className="round-panel-status">
+            <div className="round-stage-title">{stageTitle}</div>
+            <div className="round-small-note">
+              Total pot: {formatNumber(tournamentState.currentPot)}
+            </div>
+          </div>
+
+          {headerAction ?? (
+            <button type="button" className="btn btn-gray btn-small" onClick={onClose}>
+              Lukk
+            </button>
+          )}
+        </div>
+      )}
+
+      {isControlVariant ? (
+        <div className="control-round-compact-head">
+          <div className="street-tabs">
+            {STREETS.map((street, index) => (
+              <div
+                className={`street-tab ${streetIndex === index ? 'active' : ''}`}
+                key={street}
+              >
+                {street.toUpperCase()}
+              </div>
+            ))}
+
+            <div className={`street-tab ${!currentStreet ? 'active' : ''}`}>
+              SHOWDOWN
+            </div>
           </div>
         </div>
+      ) : (
+        <div className="street-tabs">
+          {STREETS.map((street, index) => (
+            <div
+              className={`street-tab ${streetIndex === index ? 'active' : ''}`}
+              key={street}
+            >
+              {street.toUpperCase()}
+            </div>
+          ))}
 
-        {headerAction ?? (
-          <button type="button" className="btn btn-gray btn-small" onClick={onClose}>
-            Lukk
-          </button>
-        )}
-      </div>
-
-      <div className="street-tabs">
-        {STREETS.map((street, index) => (
-          <div
-            className={`street-tab ${streetIndex === index ? 'active' : ''}`}
-            key={street}
-          >
-            {street.toUpperCase()}
+          <div className={`street-tab ${!currentStreet ? 'active' : ''}`}>
+            SHOWDOWN
           </div>
-        ))}
-
-        <div className={`street-tab ${!currentStreet ? 'active' : ''}`}>
-          SHOWDOWN
         </div>
-      </div>
+      )}
 
       {currentStreet ? (
         <div className="round-chip-grid">

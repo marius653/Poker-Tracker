@@ -1,0 +1,130 @@
+/* ================================
+   Control panel tablet-first layout
+
+   Prioriter spillerkort på liggende tablet:
+   - ingen topbar
+   - ingen rundevindu-overskrift/potinfo i rundepanelet
+   - room/live nederst i venstre kolonne
+   - Timer-knapp under statusboksene
+================================ */
+
+.control-page-tablet-priority .control-side-actions {
+  display: none;
+}
+
+.control-round-compact-head {
+  margin-bottom: 8px;
+}
+
+@media (min-width: 700px) and (max-height: 950px) {
+  .control-page-tablet-priority {
+    grid-template-columns: minmax(260px, 0.55fr) minmax(560px, 1.45fr);
+    grid-template-rows: auto auto 1fr auto;
+    gap: 8px;
+  }
+
+  .control-page-tablet-priority .control-topbar {
+    display: none;
+  }
+
+  .control-page-tablet-priority .control-hero {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .control-page-tablet-priority .control-status-grid {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .control-page-tablet-priority .control-side-actions {
+    grid-column: 1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    min-height: 0;
+  }
+
+  .control-page-tablet-priority .control-side-actions .control-nav-btn {
+    width: 100%;
+  }
+
+  .control-page-tablet-priority .control-side-room {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    opacity: 0.78;
+  }
+
+  .control-page-tablet-priority .control-side-room .room-badge,
+  .control-page-tablet-priority .control-side-room .sync-status-badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .control-page-tablet-priority .control-round-panel {
+    grid-column: 2;
+    grid-row: 1 / 5;
+    padding: 8px;
+  }
+
+  .control-page-tablet-priority .round-panel-inner-control {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .control-page-tablet-priority .control-round-compact-head {
+    margin-bottom: 6px;
+  }
+
+  .control-page-tablet-priority .control-round-compact-head .street-tabs {
+    margin-bottom: 0;
+  }
+
+  .control-page-tablet-priority .round-chip-grid {
+    align-content: start;
+  }
+
+  .control-page-tablet-priority .round-panel-footer {
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .control-page-tablet-priority .round-panel-footer .btn {
+    min-height: 38px;
+  }
+}
+
+@media (min-width: 900px) and (max-height: 820px) {
+  .control-page-tablet-priority {
+    grid-template-columns: minmax(235px, 0.48fr) minmax(620px, 1.52fr);
+    gap: 7px;
+  }
+
+  .control-page-tablet-priority .control-round-panel {
+    padding: 7px;
+  }
+
+  .control-page-tablet-priority .control-round-compact-head {
+    margin-bottom: 5px;
+  }
+
+  .control-page-tablet-priority .street-tab {
+    padding: 5px 7px;
+    font-size: 0.68rem;
+  }
+
+  .control-page-tablet-priority .round-panel-footer {
+    padding-top: 6px;
+  }
+}
+
+@media (max-width: 699px), (min-height: 951px) {
+  .control-page-tablet-priority .control-side-actions {
+    display: none;
+  }
+}

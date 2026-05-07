@@ -9,6 +9,7 @@ import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
 import { formatTime } from '../utils/format.js';
 import '../styles/controlPage.css';
 import '../styles/controlFitMode.css';
+import '../styles/controlTabletLayout.css';
 
 export default function ControlPage({
   roomId,
@@ -34,22 +35,7 @@ export default function ControlPage({
   }
 
   return (
-    <div className="control-page">
-      <div className="control-topbar">
-        <button type="button" className="btn btn-gray control-nav-btn" onClick={onBackToTimer}>
-          &larr; Timer
-        </button>
-
-        <div className="button-cluster">
-          <RoomBadge roomId={roomId} />
-          <SyncStatusBadge status={syncStatus} />
-        </div>
-
-        <button type="button" className="btn btn-gray control-nav-btn" onClick={onOpenRoundPage}>
-          Rundeside
-        </button>
-      </div>
-
+    <div className="control-page control-page-tablet-priority">
       <section className="control-hero panel">
         <div className="control-level-pill">
           LEVEL {currentLevel?.level}
@@ -114,6 +100,17 @@ export default function ControlPage({
         </div>
       </section>
 
+      <div className="control-side-actions">
+        <button type="button" className="btn btn-gray control-nav-btn" onClick={onBackToTimer}>
+          &larr; Timer
+        </button>
+
+        <div className="control-side-room">
+          <RoomBadge roomId={roomId} />
+          <SyncStatusBadge status={syncStatus} />
+        </div>
+      </div>
+
       <section className="control-mini-timer">
         <TimerRing
           level={currentLevel}
@@ -131,11 +128,7 @@ export default function ControlPage({
             tournamentState={tournamentState}
             setTournamentState={setTournamentState}
             onClose={onBackToTimer}
-            headerAction={(
-              <button type="button" className="btn btn-gray btn-small" onClick={onOpenRoundPage}>
-                Stor rundeside
-              </button>
-            )}
+            variant="control"
           />
         </RoundPanelErrorBoundary>
       </section>

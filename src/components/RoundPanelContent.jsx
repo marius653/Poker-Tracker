@@ -225,7 +225,23 @@ export default function RoundPanelContent({
                 : 'Avslutt runde'}
           </button>
 
-          <button type="button" className="btn btn-primary" onClick={handleResetRound}>
+          {isControlVariant && (
+            <button
+              type="button"
+              className="btn btn-gray round-reset-spacer"
+              disabled
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              &nbsp;
+            </button>
+          )}
+
+          <button
+            type="button"
+            className="btn btn-primary round-reset-button"
+            onClick={handleResetRound}
+          >
             Reset runde
           </button>
         </div>

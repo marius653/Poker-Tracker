@@ -552,3 +552,14 @@
   font-size: 0.62rem;
   border-radius: 7px;
 }
+
+/* Dummy-knapp mellom Neste og Reset for å hindre feiltrykk */
+.control-page-tablet-priority .round-reset-spacer,
+.control-page-tablet-priority .round-reset-button {
+  min-width: 92px;
+}
+
+.control-page-tablet-priority .round-reset-spacer {
+  pointer-events: none;
+  opacity: 0.35;
+}

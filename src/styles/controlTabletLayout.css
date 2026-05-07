@@ -555,33 +555,46 @@
 }
 
 /* ================================
-   Tablet control scale
+   Touch tablet scaling only
 
-   Skalerer hele kontrollpanelet ned på tablet,
-   uten å være avhengig av browser-zoom på iPad.
+   Skalerer kun touch-enheter/tablets.
+   Treffer ikke vanlig PC med mus/trackpad.
 ================================ */
 
-@media (min-width: 600px) and (min-height: 500px) {
+@media (min-width: 600px) and (max-width: 1400px) and (pointer: coarse) {
+  .app-shell:has(.control-page-tablet-priority) {
+    height: 100dvh;
+    overflow: hidden;
+    padding: 6px;
+  }
+
   .control-page.control-page-tablet-priority {
-    --control-tablet-scale: 0.80;
+    --control-tablet-scale: 0.84;
 
     transform: scale(var(--control-tablet-scale));
     transform-origin: top left;
 
     width: calc(100% / var(--control-tablet-scale));
-    height: calc((100dvh - 16px) / var(--control-tablet-scale));
+    height: calc((100dvh - 12px) / var(--control-tablet-scale));
   }
 }
 
-/* Litt mer nedskalering for smalere tablets */
-@media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
+/* Litt ekstra nedskalering på smalere tablets */
+@media (min-width: 600px) and (max-width: 900px) and (pointer: coarse) {
   .control-page.control-page-tablet-priority {
-    --control-tablet-scale: 0.80;
+    --control-tablet-scale: 0.8;
   }
 }
 
-/* Ikke skaler på mobil */
-@media (max-width: 599px), (max-height: 499px) {
+/* PC / mus / trackpad skal ikke skaleres */
+@media (pointer: fine) {
+  .control-page.control-page-tablet-priority {
+    transform: none;
+  }
+}
+
+/* Mobil skal ikke bruke tablet-skalering */
+@media (max-width: 599px) {
   .control-page.control-page-tablet-priority {
     transform: none;
     width: 100%;

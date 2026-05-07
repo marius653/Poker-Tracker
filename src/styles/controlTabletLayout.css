@@ -14,7 +14,7 @@
 
 /* Juster denne hvis du vil zoome hele kontrollpanelet */
 .control-page.control-page-tablet-priority {
-  --control-scale: 0.84;
+  --control-scale: 1;
 
   width: calc(100% / var(--control-scale));
   height: calc((100dvh - 12px) / var(--control-scale));

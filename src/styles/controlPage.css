@@ -1,0 +1,208 @@
+/* ================================
+   Control page / iPad-first layout
+================================ */
+
+.control-page {
+  width: min(1500px, 100%);
+  min-height: calc(100vh - 48px);
+  display: grid;
+  grid-template-columns: minmax(340px, 0.9fr) minmax(520px, 1.3fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.control-topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.control-nav-btn {
+  min-height: 52px;
+  min-width: 150px;
+}
+
+.control-hero {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.control-level-pill {
+  align-self: flex-start;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: rgba(214, 64, 69, 0.18);
+  border: 1px solid rgba(214, 64, 69, 0.28);
+  color: #ffd5d6;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  font-size: 0.9rem;
+}
+
+.control-time {
+  font-size: clamp(4rem, 11vw, 8rem);
+  font-weight: 950;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.control-blinds {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 18px;
+}
+
+.control-blinds div:not(.control-blind-divider) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.control-blinds span {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.86rem;
+}
+
+.control-blinds strong {
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 1;
+}
+
+.control-blind-divider {
+  color: var(--muted);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.control-next-level {
+  text-align: center;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.control-main-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.control-big-btn {
+  width: 100%;
+  min-height: 84px;
+  border-radius: 22px;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.control-level-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.control-wide-btn {
+  min-height: 70px;
+  border-radius: 18px;
+  font-size: 1.2rem;
+}
+
+.control-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.control-status-card {
+  padding: 18px;
+  text-align: center;
+}
+
+.control-status-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.control-status-value {
+  font-size: 2.2rem;
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+}
+
+.control-mini-timer {
+  display: none;
+}
+
+.control-round-panel {
+  grid-column: 2;
+  grid-row: 2 / span 4;
+  padding: 18px;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+}
+
+.control-round-panel .round-panel-head {
+  grid-template-columns: 1fr;
+}
+
+.control-round-panel .round-panel-status {
+  text-align: left;
+}
+
+.control-round-panel .round-chip-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 1050px) {
+  .control-page {
+    grid-template-columns: 1fr;
+  }
+
+  .control-round-panel {
+    grid-column: auto;
+    grid-row: auto;
+    max-height: none;
+  }
+
+  .control-status-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .control-topbar {
+    justify-content: center;
+  }
+
+  .control-nav-btn {
+    width: 100%;
+  }
+
+  .control-level-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .control-status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-big-btn {
+    min-height: 76px;
+    font-size: 1.65rem;
+  }
+}

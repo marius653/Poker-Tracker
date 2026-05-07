@@ -19,6 +19,7 @@ export default function TimerPage({
   onNewRoom,
   onLevelChangeSound,
   onOpenRoundPage,
+  onOpenControlPage,
 }) {
   const [stackModalOpen, setStackModalOpen] = useState(false);
   const [handRankingsOpen, setHandRankingsOpen] = useState(false);
@@ -83,6 +84,9 @@ export default function TimerPage({
           </button>
           <button type="button" className="btn btn-gray" onClick={onOpenRoundPage}>
             Rundeside
+          </button>
+          <button type="button" className="btn btn-gray" onClick={onOpenControlPage}>
+            Kontrollside
           </button>
           <button type="button" className="btn btn-gray" onClick={() => setHandRankingsOpen(true)}>
             Hand rankings

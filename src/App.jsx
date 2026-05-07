@@ -1,6 +1,7 @@
 import './styles/room.css';
 
 import { useEffect, useState } from 'react';
+import ControlPage from './components/ControlPage.jsx';
 import RoundPage from './components/RoundPage.jsx';
 import SetupPage from './components/SetupPage.jsx';
 import TimerPage from './components/TimerPage.jsx';
@@ -44,7 +45,7 @@ export default function App() {
 
   const { playLevelUpSound, primeLevelUpSound } = useLevelSound('/levelup.wav');
 
-  const tournamentIsActive = page === 'timer' || page === 'round';
+  const tournamentIsActive = page === 'timer' || page === 'round' || page === 'control';
   useWakeLock(tournamentIsActive);
 
   useEffect(() => {
@@ -106,6 +107,21 @@ export default function App() {
     setPage('setup');
   }
 
+  if (page === 'control') {
+    return (
+      <main className="app-shell">
+        <ControlPage
+          roomId={roomId}
+          tournamentState={tournamentState}
+          setTournamentState={setTournamentState}
+          onBackToTimer={() => setPage('timer')}
+          onOpenRoundPage={() => setPage('round')}
+          onLevelChangeSound={playLevelUpSound}
+        />
+      </main>
+    );
+  }
+
   if (page === 'round') {
     return (
       <main className="app-shell">
@@ -130,6 +146,7 @@ export default function App() {
           onNewRoom={handleNewRoom}
           onLevelChangeSound={playLevelUpSound}
           onOpenRoundPage={() => setPage('round')}
+          onOpenControlPage={() => setPage('control')}
         />
       </main>
     );

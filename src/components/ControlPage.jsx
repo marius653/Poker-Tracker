@@ -1,3 +1,4 @@
+import FullscreenButton from './FullscreenButton.jsx';
 import RoomBadge from './RoomBadge.jsx';
 import RoundPanelContent from './RoundPanelContent.jsx';
 import RoundPanelErrorBoundary from './RoundPanelErrorBoundary.jsx';
@@ -104,6 +105,8 @@ export default function ControlPage({
         <button type="button" className="btn btn-gray control-nav-btn" onClick={onBackToTimer}>
           &larr; Timer
         </button>
+
+        <FullscreenButton />
 
         <div className="control-side-room">
           <RoomBadge roomId={roomId} />

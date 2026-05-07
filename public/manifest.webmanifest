@@ -1,0 +1,23 @@
+{
+  "name": "Poker Timer",
+  "short_name": "Poker Timer",
+  "description": "Poker tournament timer and control panel",
+  "start_url": "/poker-tracker/",
+  "scope": "/poker-tracker/",
+  "display": "fullscreen",
+  "background_color": "#16181c",
+  "theme_color": "#16181c",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

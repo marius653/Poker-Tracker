@@ -1,0 +1,20 @@
+/* ================================
+   Fullscreen / PWA helpers
+================================ */
+
+.fullscreen-btn {
+  width: 100%;
+}
+
+@media all and (display-mode: fullscreen), all and (display-mode: standalone) {
+  body {
+    overscroll-behavior: none;
+  }
+
+  .app-shell:has(.control-page) {
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-right: max(8px, env(safe-area-inset-right));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    padding-left: max(8px, env(safe-area-inset-left));
+  }
+}

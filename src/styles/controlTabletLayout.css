@@ -561,7 +561,7 @@
    Treffer ikke vanlig PC med mus/trackpad.
 ================================ */
 
-@media (min-width: 600px) and (max-width: 1400px) and (pointer: coarse) {
+@media (min-width: 600px) and (max-width: 1400px) and (hover: none) {
   .app-shell:has(.control-page-tablet-priority) {
     height: 100dvh;
     overflow: hidden;

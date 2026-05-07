@@ -1,4 +1,5 @@
 import RoundPanelContent from './RoundPanelContent.jsx';
+import RoundPanelErrorBoundary from './RoundPanelErrorBoundary.jsx';
 import '../styles/roundPanel.css';
 
 export default function RoundPanel({
@@ -17,11 +18,13 @@ export default function RoundPanel({
       }}
     >
       <div className="round-panel-modal">
-        <RoundPanelContent
-          tournamentState={tournamentState}
-          setTournamentState={setTournamentState}
-          onClose={onClose}
-        />
+        <RoundPanelErrorBoundary>
+          <RoundPanelContent
+            tournamentState={tournamentState}
+            setTournamentState={setTournamentState}
+            onClose={onClose}
+          />
+        </RoundPanelErrorBoundary>
       </div>
     </div>
   );

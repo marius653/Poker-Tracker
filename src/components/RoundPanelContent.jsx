@@ -1,5 +1,5 @@
 import RoundPlayerCard from './RoundPlayerCard.jsx';
-import WinnerSelection from './WinnerSelection.jsx';
+import ShowdownPanel from './ShowdownPanel.jsx';
 import { STREETS } from '../state/pokerConstants.js';
 import {
   addChipToPlayer,
@@ -12,6 +12,7 @@ import {
   setFolded,
 } from '../state/pokerLogic.js';
 import { formatNumber } from '../utils/format.js';
+import '../styles/showdownFix.css';
 
 const STREET_LABELS = {
   preflop: 'Preflop',
@@ -43,8 +44,9 @@ export default function RoundPanelContent({
     );
   }
 
-  const currentStreet = handState.streetIndex < STREETS.length
-    ? STREETS[handState.streetIndex]
+  const streetIndex = Number(handState.streetIndex) || 0;
+  const currentStreet = streetIndex >= 0 && streetIndex < STREETS.length
+    ? STREETS[streetIndex]
     : null;
 
   const stageTitle = currentStreet
@@ -107,7 +109,11 @@ export default function RoundPanelContent({
   function handleToggleWinner(potIndex, playerId, checked) {
     setTournamentState((currentState) => {
       const nextState = structuredClone(currentState);
-      const existing = new Set(nextState.handState.winnersByPot[potIndex] || []);
+      const existing = new Set(nextState.handState.winnersByPot?.[potIndex] || []);
+
+      if (!nextState.handState.winnersByPot) {
+        nextState.handState.winnersByPot = {};
+      }
 
       if (checked) {
         existing.add(playerId);
@@ -128,7 +134,7 @@ export default function RoundPanelContent({
           <h2>Rundevindu</h2>
           <p className="round-small-note">
             Blinds legges automatisk på preflop ved ny runde.
-            Venstreklikk på chip legger til, høyreklikk trekker fra.
+            Trykk chip/pluss for å legge til. Minus trekker fra.
           </p>
         </div>
 
@@ -149,7 +155,7 @@ export default function RoundPanelContent({
       <div className="street-tabs">
         {STREETS.map((street, index) => (
           <div
-            className={`street-tab ${handState.streetIndex === index ? 'active' : ''}`}
+            className={`street-tab ${streetIndex === index ? 'active' : ''}`}
             key={street}
           >
             {street.toUpperCase()}
@@ -178,7 +184,7 @@ export default function RoundPanelContent({
           ))}
         </div>
       ) : (
-        <WinnerSelection
+        <ShowdownPanel
           tournamentState={tournamentState}
           onToggleWinner={handleToggleWinner}
         />
@@ -190,14 +196,14 @@ export default function RoundPanelContent({
             type="button"
             className="btn btn-gray"
             onClick={handlePrevStreet}
-            disabled={handState.streetIndex <= 0}
+            disabled={streetIndex <= 0}
           >
             Tilbake
           </button>
 
           <button type="button" className="btn btn-yellow" onClick={handleNextStreet}>
             {currentStreet === 'river'
-              ? 'Neste (velg vinner)'
+              ? 'Velg vinner'
               : currentStreet
                 ? 'Neste'
                 : 'Avslutt runde'}

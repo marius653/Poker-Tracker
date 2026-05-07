@@ -1,5 +1,6 @@
 import RoomBadge from './RoomBadge.jsx';
 import RoundPanelContent from './RoundPanelContent.jsx';
+import RoundPanelErrorBoundary from './RoundPanelErrorBoundary.jsx';
 import SyncStatusBadge from './SyncStatusBadge.jsx';
 import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
@@ -124,16 +125,18 @@ export default function ControlPage({
       </section>
 
       <section className="control-round-panel panel">
-        <RoundPanelContent
-          tournamentState={tournamentState}
-          setTournamentState={setTournamentState}
-          onClose={onBackToTimer}
-          headerAction={(
-            <button type="button" className="btn btn-gray btn-small" onClick={onOpenRoundPage}>
-              Stor rundeside
-            </button>
-          )}
-        />
+        <RoundPanelErrorBoundary>
+          <RoundPanelContent
+            tournamentState={tournamentState}
+            setTournamentState={setTournamentState}
+            onClose={onBackToTimer}
+            headerAction={(
+              <button type="button" className="btn btn-gray btn-small" onClick={onOpenRoundPage}>
+                Stor rundeside
+              </button>
+            )}
+          />
+        </RoundPanelErrorBoundary>
       </section>
     </div>
   );

@@ -1,355 +1,130 @@
 /* ================================
-   Control panel tablet-only layout
+   Control panel tablet-first layout
 
-   Dette kontrollpanelet er laget for tablet.
-   Ingen mobil-fallback, ingen orientation-regler, ingen høyde-detektering.
-================================ */
-
-.app-shell:has(.control-page-tablet-priority) {
-  height: 100dvh;
-  overflow: hidden;
-  padding: 6px;
-  align-items: stretch;
-}
-
-/* Juster denne hvis du vil zoome hele kontrollpanelet */
-.control-page.control-page-tablet-priority {
-  --control-scale: 1;
-
-  width: calc(100% / var(--control-scale));
-  height: calc((100dvh - 12px) / var(--control-scale));
-  min-height: 0;
-  overflow: hidden;
-
-  transform: scale(var(--control-scale));
-  transform-origin: top left;
-
-  display: grid;
-  grid-template-columns: 245px minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr);
-  gap: 6px;
-  align-items: stretch;
-}
-
-/* Venstre kolonne */
-.control-page-tablet-priority .control-left-column {
-  grid-column: 1;
-  grid-row: 1;
-
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-}
-
-/* Høyre kolonne */
-.control-page-tablet-priority .control-right-column {
-  grid-column: 2;
-  grid-row: 1;
-
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
-}
-
-/* Skjul ting som ikke trengs i tablet control */
-.control-page-tablet-priority .control-topbar,
-.control-page-tablet-priority .control-mini-timer {
-  display: none;
-}
-
-/* ================================
-   Venstre: timer / blinds / level
-================================ */
-
-.control-page-tablet-priority .control-hero {
-  flex: 0 0 auto;
-  padding: 7px;
-  gap: 5px;
-  min-width: 0;
-  min-height: 0;
-}
-
-.control-page-tablet-priority .control-level-pill {
-  padding: 4px 8px;
-  font-size: 0.62rem;
-}
-
-.control-page-tablet-priority .control-time {
-  font-size: clamp(2rem, 7dvh, 3.8rem);
-  line-height: 0.9;
-}
-
-.control-page-tablet-priority .control-blinds {
-  gap: 7px;
-}
-
-.control-page-tablet-priority .control-blinds span {
-  font-size: 0.58rem;
-}
-
-.control-page-tablet-priority .control-blinds strong {
-  font-size: clamp(1.35rem, 4.5dvh, 2.5rem);
-}
-
-.control-page-tablet-priority .control-blind-divider {
-  font-size: clamp(1.25rem, 4dvh, 2.2rem);
-}
-
-.control-page-tablet-priority .control-next-level {
-  font-size: 0.68rem;
-}
-
-.control-page-tablet-priority .control-big-btn {
-  min-height: 36px;
-  border-radius: 12px;
-  font-size: 1rem;
-}
-
-.control-page-tablet-priority .control-level-actions {
-  gap: 5px;
-}
-
-.control-page-tablet-priority .control-wide-btn {
-  min-height: 31px;
-  padding: 6px 8px;
-  border-radius: 10px;
-  font-size: 0.7rem;
-}
-
-/* ================================
-   Venstre: Pot / Runde / Spillere
-================================ */
-
-.control-page-tablet-priority .control-status-grid {
-  flex: 0 0 auto;
-
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-  min-width: 0;
-}
-
-.control-page-tablet-priority .control-status-card {
-  padding: 5px 3px;
-  min-width: 0;
-}
-
-.control-page-tablet-priority .control-status-label {
-  font-size: 0.44rem;
-  margin-bottom: 2px;
-  letter-spacing: 0.05em;
-}
-
-.control-page-tablet-priority .control-status-value {
-  font-size: 0.9rem;
-  line-height: 1;
-}
-
-/* ================================
-   Venstre: navigasjon / room
+   Prioriter spillerkort på liggende tablet:
+   - ingen topbar
+   - ingen rundevindu-overskrift/potinfo i rundepanelet
+   - room/live nederst i venstre kolonne
+   - Timer-knapp under statusboksene
 ================================ */
 
 .control-page-tablet-priority .control-side-actions {
-  flex: 1 1 auto;
-
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
+  display: none;
 }
 
-.control-page-tablet-priority .control-side-actions .btn {
-  min-height: 29px;
-  padding: 5px 7px;
-  border-radius: 9px;
-  font-size: 0.66rem;
+.control-round-compact-head {
+  margin-bottom: 8px;
 }
 
-.control-page-tablet-priority .control-side-actions .control-nav-btn {
-  width: 100%;
-  min-width: 0;
+@media (min-width: 700px) and (max-height: 950px) {
+  .control-page-tablet-priority {
+    grid-template-columns: minmax(260px, 0.55fr) minmax(560px, 1.45fr);
+    grid-template-rows: auto auto 1fr auto;
+    gap: 8px;
+  }
+
+  .control-page-tablet-priority .control-topbar {
+    display: none;
+  }
+
+  .control-page-tablet-priority .control-hero {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .control-page-tablet-priority .control-status-grid {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .control-page-tablet-priority .control-side-actions {
+    grid-column: 1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    min-height: 0;
+  }
+
+  .control-page-tablet-priority .control-side-actions .control-nav-btn {
+    width: 100%;
+  }
+
+  .control-page-tablet-priority .control-side-room {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    opacity: 0.78;
+  }
+
+  .control-page-tablet-priority .control-side-room .room-badge,
+  .control-page-tablet-priority .control-side-room .sync-status-badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .control-page-tablet-priority .control-round-panel {
+    grid-column: 2;
+    grid-row: 1 / 5;
+    padding: 8px;
+  }
+
+  .control-page-tablet-priority .round-panel-inner-control {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .control-page-tablet-priority .control-round-compact-head {
+    margin-bottom: 6px;
+  }
+
+  .control-page-tablet-priority .control-round-compact-head .street-tabs {
+    margin-bottom: 0;
+  }
+
+  .control-page-tablet-priority .round-chip-grid {
+    align-content: start;
+  }
+
+  .control-page-tablet-priority .round-panel-footer {
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .control-page-tablet-priority .round-panel-footer .btn {
+    min-height: 38px;
+  }
 }
 
-.control-page-tablet-priority .control-side-room {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 0;
-  opacity: 0.8;
+@media (min-width: 900px) and (max-height: 820px) {
+  .control-page-tablet-priority {
+    grid-template-columns: minmax(235px, 0.48fr) minmax(620px, 1.52fr);
+    gap: 7px;
+  }
+
+  .control-page-tablet-priority .control-round-panel {
+    padding: 7px;
+  }
+
+  .control-page-tablet-priority .control-round-compact-head {
+    margin-bottom: 5px;
+  }
+
+  .control-page-tablet-priority .street-tab {
+    padding: 5px 7px;
+    font-size: 0.68rem;
+  }
+
+  .control-page-tablet-priority .round-panel-footer {
+    padding-top: 6px;
+  }
 }
 
-.control-page-tablet-priority .control-side-room .room-badge,
-.control-page-tablet-priority .control-side-room .sync-status-badge {
-  width: 100%;
-  justify-content: center;
-}
-
-/* ================================
-   Høyre: rundepanel / spillerkort
-================================ */
-
-.control-page-tablet-priority .control-right-column > .control-round-panel {
-  flex: 1 1 auto;
-
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-  max-height: none;
-
-  margin: 0;
-  padding: 5px;
-  overflow: auto;
-  align-self: stretch;
-
-  grid-column: auto;
-  grid-row: auto;
-}
-
-.control-page-tablet-priority .round-panel-inner-control {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.control-page-tablet-priority .control-round-compact-head {
-  margin-bottom: 3px;
-}
-
-.control-page-tablet-priority .control-round-compact-head .street-tabs {
-  margin-bottom: 0;
-}
-
-.control-page-tablet-priority .street-tabs {
-  gap: 3px;
-  margin-bottom: 3px;
-}
-
-.control-page-tablet-priority .street-tab {
-  padding: 3px 5px;
-  font-size: 0.54rem;
-}
-
-/* Spillerkort-grid */
-.control-page-tablet-priority .round-chip-grid {
-  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-  gap: 4px;
-  margin-top: 3px;
-  align-content: start;
-}
-
-.control-page-tablet-priority .round-player-card {
-  padding: 5px;
-  border-radius: 9px;
-}
-
-.control-page-tablet-priority .round-player-head {
-  margin-bottom: 3px;
-  gap: 3px;
-}
-
-.control-page-tablet-priority .round-player-name {
-  font-size: 0.72rem;
-}
-
-.control-page-tablet-priority .round-player-meta,
-.control-page-tablet-priority .round-player-stack {
-  font-size: 0.56rem;
-}
-
-/* Chip-kontroller */
-.control-page-tablet-priority .chip-row {
-  gap: 2px;
-}
-
-.control-page-tablet-priority .chip-control {
-  grid-template-columns: 18px 31px 18px;
-  gap: 2px;
-}
-
-.control-page-tablet-priority .chip-minus-btn,
-.control-page-tablet-priority .chip-plus-btn {
-  width: 18px;
-  height: 24px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-}
-
-.control-page-tablet-priority .chip-btn {
-  width: 31px;
-  height: 31px;
-  border-width: 2px;
-  font-size: 0.56rem;
-}
-
-.control-page-tablet-priority .chip-count {
-  min-width: 13px;
-  height: 13px;
-  font-size: 0.48rem;
-  top: -4px;
-  right: -2px;
-  padding: 0 3px;
-}
-
-.control-page-tablet-priority .round-player-summary {
-  margin-top: 3px;
-  gap: 3px;
-  font-size: 0.56rem;
-}
-
-.control-page-tablet-priority .round-player-controls {
-  margin-top: 3px;
-  gap: 3px;
-}
-
-.control-page-tablet-priority .inline-check {
-  padding: 3px 5px;
-  border-radius: 6px;
-  font-size: 0.56rem;
-  gap: 4px;
-}
-
-/* Footer */
-.control-page-tablet-priority .round-panel-footer {
-  margin-top: 4px;
-  padding-top: 4px;
-}
-
-.control-page-tablet-priority .round-panel-footer .btn {
-  min-height: 28px;
-  padding: 5px 7px;
-  font-size: 0.64rem;
-  border-radius: 7px;
-}
-
-/* Showdown */
-.control-page-tablet-priority .winners-panel {
-  margin-top: 5px;
-  padding: 6px;
-}
-
-.control-page-tablet-priority .winner-group {
-  margin-top: 5px;
-  padding: 6px;
-}
-
-.control-page-tablet-priority .winner-checkboxes {
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 4px;
-}
-
-.control-page-tablet-priority .winner-checkboxes label {
-  padding: 5px 6px;
-  font-size: 0.66rem;
+@media (max-width: 699px), (min-height: 951px) {
+  .control-page-tablet-priority .control-side-actions {
+    display: none;
+  }
 }

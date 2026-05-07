@@ -563,7 +563,7 @@
 
 @media (min-width: 600px) and (min-height: 500px) {
   .control-page.control-page-tablet-priority {
-    --control-tablet-scale: 0.88;
+    --control-tablet-scale: 0.80;
 
     transform: scale(var(--control-tablet-scale));
     transform-origin: top left;
@@ -576,7 +576,7 @@
 /* Litt mer nedskalering for smalere tablets */
 @media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
   .control-page.control-page-tablet-priority {
-    --control-tablet-scale: 0.82;
+    --control-tablet-scale: 0.80;
   }
 }
 

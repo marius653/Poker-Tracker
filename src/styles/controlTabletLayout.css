@@ -1,18 +1,36 @@
 /* ================================
    Control panel tablet layout
 
-   Robust tablet layout:
-   - Tablet og større: 2 kolonner
-   - Venstre: timer -> status -> knapper
-   - Høyre: rundepanel / spillerkort
-   - Mobil/smal skjerm: 1 kolonne
+   Denne filen overstyrer controlPage.css/controlFitMode.css med en mer robust
+   struktur for tablets. Hovedgrepet er at ControlPage.jsx nå har en faktisk
+   venstre kolonne-wrapper (.control-left-column), slik at statusboksene ikke
+   kan auto-plasseres i høyre kolonne på iPad.
+
+   Tablet og større:
+   - Venstre kolonne:
+     1. Timer / blinds / start / level
+     2. Pot / Runde / Spillere
+     3. Til timer / fullscreen / room / sync
+   - Høyre kolonne:
+     Rundepanel / spillerkort
+
+   Mobil / veldig smal skjerm:
+   - Én kolonne
 ================================ */
 
-/* Alltid vis kontrollknappene */
+.control-page-tablet-priority .control-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+
 .control-page-tablet-priority .control-side-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .control-page-tablet-priority .control-side-actions .control-nav-btn {
@@ -38,10 +56,10 @@
 }
 
 /* ================================
-   Tablet layout
+   Robust tablet layout
 
-   Bruker bredde + minimum høyde, ikke orientation.
-   Dette gjør at iPad/Safari/PWA/Stage Manager blir mindre sårbart.
+   Ikke bruk orientation/max-height her. iPad/Safari/PWA/Stage Manager kan
+   rapportere viewport forskjellig. Bredde + min-høyde er mer stabilt.
 ================================ */
 
 @media (min-width: 600px) and (min-height: 500px) {
@@ -60,68 +78,50 @@
 
     display: grid;
     grid-template-columns: clamp(220px, 27vw, 330px) minmax(0, 1fr);
-    grid-template-rows: auto auto auto minmax(0, 1fr);
-    grid-template-areas:
-      "hero status"
-      "hero round"
-      "actions round"
-      "actions round";
+    grid-template-rows: minmax(0, 1fr);
     gap: 8px;
     align-items: stretch;
   }
 
-  /*
-    OBS:
-    Status ligger i høyre side i grid-template-areas over?
-    Nei — vi flytter status eksplisitt til venstre under hero med egen layout under.
-    Denne brukes for tablets med nok plass.
-  */
-
-  .control-page-tablet-priority {
-    grid-template-areas:
-      "hero round"
-      "status round"
-      "actions round"
-      "actions round";
-  }
-
-  /* Skjul eventuell gammel topbar i tablet-layout */
-  .control-page-tablet-priority .control-topbar {
+  .control-page-tablet-priority .control-topbar,
+  .control-page-tablet-priority .control-mini-timer {
     display: none;
   }
 
-  /* Venstre topp: timer/blinds/start/level */
-  .control-page-tablet-priority .control-hero {
-    grid-area: hero;
-    min-width: 0;
-    min-height: 0;
-    padding: 10px;
-    gap: 7px;
+  .control-page-tablet-priority .control-left-column {
+    grid-column: 1;
+    grid-row: 1;
+    height: 100%;
+    overflow: auto;
+    padding-right: 1px;
   }
 
-  /* Venstre midt: Pot / Runde / Spillere */
-  .control-page-tablet-priority .control-status-grid {
-    grid-area: status;
+  .control-page-tablet-priority .control-hero {
+    flex: 0 0 auto;
+    padding: 10px;
+    gap: 7px;
     min-width: 0;
+    min-height: 0;
+  }
 
+  .control-page-tablet-priority .control-status-grid {
+    flex: 0 0 auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 7px;
+    min-width: 0;
   }
 
-  /* Venstre bunn: Til timer / fullscreen / room / sync */
   .control-page-tablet-priority .control-side-actions {
-    grid-area: actions;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     gap: 7px;
-    min-width: 0;
-    min-height: 0;
   }
 
-  /* Høyre: rundepanel / spillerkort */
   .control-page-tablet-priority .control-round-panel {
-    grid-area: round;
+    grid-column: 2;
+    grid-row: 1;
     height: 100%;
     min-width: 0;
     min-height: 0;
@@ -131,21 +131,13 @@
     align-self: stretch;
   }
 
-  .control-page-tablet-priority .control-mini-timer {
-    display: none;
-  }
-
-  /* ================================
-     Venstre kolonne sizing
-  ================================ */
-
   .control-page-tablet-priority .control-level-pill {
     padding: 5px 9px;
     font-size: 0.68rem;
   }
 
   .control-page-tablet-priority .control-time {
-    font-size: clamp(2.4rem, 8dvh, 4.8rem);
+    font-size: clamp(2.35rem, 8dvh, 4.8rem);
     line-height: 0.9;
   }
 
@@ -222,10 +214,6 @@
     width: 100%;
     justify-content: center;
   }
-
-  /* ================================
-     Høyre rundepanel / spillerkort
-  ================================ */
 
   .control-page-tablet-priority .round-panel-inner-control {
     display: flex;
@@ -354,15 +342,14 @@
   }
 }
 
-/* ================================
-   Smal tablet / liten skjerm
-
-   Fortsatt tablet-layout, men venstre kolonne blir mindre.
-================================ */
-
+/* Smal tablet / mindre viewport */
 @media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
   .control-page-tablet-priority {
     grid-template-columns: clamp(200px, 30vw, 260px) minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .control-page-tablet-priority .control-left-column {
     gap: 6px;
   }
 
@@ -440,12 +427,7 @@
   }
 }
 
-/* ================================
-   Mobil / veldig smal skjerm
-
-   Én kolonne. Dette skal ikke treffe vanlige tablets.
-================================ */
-
+/* Mobil / veldig smal skjerm */
 @media (max-width: 599px), (max-height: 499px) {
   .app-shell:has(.control-page-tablet-priority) {
     height: auto;
@@ -453,18 +435,16 @@
   }
 
   .control-page-tablet-priority {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     height: auto;
     overflow: visible;
   }
 
-  .control-page-tablet-priority .control-hero,
-  .control-page-tablet-priority .control-status-grid,
-  .control-page-tablet-priority .control-side-actions,
-  .control-page-tablet-priority .control-round-panel {
-    grid-column: auto;
-    grid-row: auto;
-    grid-area: auto;
+  .control-page-tablet-priority .control-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   .control-page-tablet-priority .control-side-actions {

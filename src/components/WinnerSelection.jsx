@@ -5,19 +5,31 @@ export default function WinnerSelection({
   tournamentState,
   onToggleWinner,
 }) {
-  const pots = buildSidePots(tournamentState);
+  const handState = tournamentState.handState;
+  const pots = handState ? buildSidePots(tournamentState) : [];
+
+  if (!handState) {
+    return (
+      <div className="winners-panel showdown-panel">
+        <h3>Vinnerfordeling</h3>
+        <p className="round-small-note">Ingen aktiv runde.</p>
+      </div>
+    );
+  }
 
   if (!pots.length) {
     return (
-      <div className="winners-panel">
+      <div className="winners-panel showdown-panel">
         <h3>Vinnerfordeling</h3>
-        <p className="round-small-note">Ingen potter å fordele enda.</p>
+        <p className="round-small-note">
+          Ingen potter å fordele enda. Gå tilbake og legg inn chips/blinds før du avslutter runden.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="winners-panel">
+    <div className="winners-panel showdown-panel">
       <h3>Vinnerfordeling</h3>
       <p className="round-small-note">
         Sidepots beregnes automatisk ut fra total innsats og fold-status.
@@ -25,7 +37,7 @@ export default function WinnerSelection({
       </p>
 
       {pots.map((pot, potIndex) => {
-        const selectedWinnerIds = tournamentState.handState.winnersByPot[potIndex] || [];
+        const selectedWinnerIds = handState.winnersByPot[potIndex] || [];
         const eligiblePlayers = tournamentState.players.filter((player) =>
           pot.eligiblePlayerIds.includes(player.id),
         );

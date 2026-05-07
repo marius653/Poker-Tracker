@@ -5,15 +5,27 @@ import {
   subscribeToFirebaseRoom,
 } from './firebaseRoomStorage.js';
 
+function getClockAdjustedState(tournamentState, now = Date.now()) {
+  if (!tournamentState) return tournamentState;
+
+  if (!tournamentState.timerRunning || !tournamentState.levelEndsAt) {
+    return tournamentState;
+  }
+
+  return {
+    ...tournamentState,
+    timeRemainingSec: Math.max(
+      0,
+      Math.ceil((tournamentState.levelEndsAt - now) / 1000),
+    ),
+  };
+}
+
 function getSyncSignature(tournamentState) {
   if (!tournamentState) return '';
 
-  // timeRemainingSec endres hvert tick lokalt på hver enhet.
-  // Hvis vi publiserer den til Firebase hele tiden, kan PC-en overskrive
-  // mobil/iPad-endringer som chips, fold, all-in og level-klikk.
-  //
-  // Derfor utelater vi timeRemainingSec fra signaturen.
-  // Selve timeren synkes fortsatt via timerRunning + levelEndsAt.
+  // timeRemainingSec er en lokal visningsverdi som endres hvert tick.
+  // levelEndsAt + timerRunning er den egentlige sync-kilden for timeren.
   const {
     timeRemainingSec,
     ...stateWithoutLocalTick
@@ -68,9 +80,11 @@ export function useFirebaseRoomSync({
         return;
       }
 
+      const adjustedRemoteState = getClockAdjustedState(remoteRoom.tournamentState);
+
       applyingRemoteRef.current = true;
-      lastPublishedSignatureRef.current = getSyncSignature(remoteRoom.tournamentState);
-      setTournamentState(remoteRoom.tournamentState);
+      lastPublishedSignatureRef.current = getSyncSignature(adjustedRemoteState);
+      setTournamentState(adjustedRemoteState);
 
       window.setTimeout(() => {
         applyingRemoteRef.current = false;
@@ -87,11 +101,10 @@ export function useFirebaseRoomSync({
     if (applyingRemoteRef.current) return undefined;
     if (!tournamentState?.players?.length) return undefined;
 
-    const nextSignature = getSyncSignature(tournamentState);
+    const publishState = getClockAdjustedState(tournamentState);
+    const nextSignature = getSyncSignature(publishState);
 
     // Ikke publiser rene lokale timer-ticks.
-    // Publiser kun når noe "ekte" har endret seg:
-    // start/pause, level, players, pot, chips, handState, osv.
     if (nextSignature === lastPublishedSignatureRef.current) {
       return undefined;
     }
@@ -104,7 +117,7 @@ export function useFirebaseRoomSync({
       publishFirebaseRoomState({
         roomId,
         clientId: clientIdRef.current,
-        tournamentState,
+        tournamentState: publishState,
       })
         .then(() => setSyncStatus('connected'))
         .catch((error) => {

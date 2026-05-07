@@ -1,6 +1,7 @@
 import { CHIP_TYPES } from '../state/pokerConstants.js';
 import { chipStateAmount, getRemainingChipsForPlayer } from '../state/pokerLogic.js';
 import { formatNumber } from '../utils/format.js';
+import '../styles/roundTouchControls.css';
 
 export default function RoundPlayerCard({
   player,
@@ -47,25 +48,45 @@ export default function RoundPlayerCard({
 
       {currentStreet && (
         <>
-          <div className="chip-row">
+          <div className="chip-row chip-row-touch">
             {CHIP_TYPES.map((chip) => (
-              <button
-                type="button"
-                key={chip.key}
-                className={`chip-btn ${chip.className}`}
-                onClick={() => onAddChip(player.id, chip.key)}
-                onContextMenu={(event) => {
-                  event.preventDefault();
-                  onRemoveChip(player.id, chip.key);
-                }}
-                title="Venstreklikk legger til. Høyreklikk trekker fra."
-              >
-                {chip.label}
+              <div className="chip-control" key={chip.key}>
+                <button
+                  type="button"
+                  className="chip-minus-btn"
+                  onClick={() => onRemoveChip(player.id, chip.key)}
+                  aria-label={`Trekk fra ${chip.label}`}
+                  disabled={!chips?.[chip.key]}
+                >
+                  −
+                </button>
 
-                {chips?.[chip.key] > 0 && (
-                  <span className="chip-count">{chips[chip.key]}</span>
-                )}
-              </button>
+                <button
+                  type="button"
+                  className={`chip-btn ${chip.className}`}
+                  onClick={() => onAddChip(player.id, chip.key)}
+                  onContextMenu={(event) => {
+                    event.preventDefault();
+                    onRemoveChip(player.id, chip.key);
+                  }}
+                  title="Trykk legger til. Minus-knappen trekker fra."
+                >
+                  {chip.label}
+
+                  {chips?.[chip.key] > 0 && (
+                    <span className="chip-count">{chips[chip.key]}</span>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  className="chip-plus-btn"
+                  onClick={() => onAddChip(player.id, chip.key)}
+                  aria-label={`Legg til ${chip.label}`}
+                >
+                  +
+                </button>
+              </div>
             ))}
           </div>
 

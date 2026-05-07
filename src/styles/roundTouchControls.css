@@ -1,0 +1,64 @@
+/* ================================
+   Touch-friendly chip controls
+================================ */
+
+.chip-row-touch {
+  align-items: flex-start;
+}
+
+.chip-control {
+  display: grid;
+  grid-template-columns: 34px 54px 34px;
+  gap: 5px;
+  align-items: center;
+}
+
+.chip-minus-btn,
+.chip-plus-btn {
+  width: 34px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 950;
+  font-size: 1.15rem;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+}
+
+.chip-minus-btn {
+  color: #ffd0d2;
+}
+
+.chip-plus-btn {
+  color: #d9ffe9;
+}
+
+.chip-minus-btn:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}
+
+.showdown-panel {
+  min-height: 220px;
+}
+
+@media (max-width: 700px) {
+  .chip-control {
+    grid-template-columns: 40px 58px 40px;
+    gap: 7px;
+  }
+
+  .chip-minus-btn,
+  .chip-plus-btn {
+    width: 40px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .chip-control .chip-btn {
+    width: 58px;
+    height: 58px;
+  }
+}

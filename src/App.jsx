@@ -51,7 +51,7 @@ export default function App() {
   });
   const [joinRoomModalOpen, setJoinRoomModalOpen] = useState(false);
 
-  const { playLevelUpSound, primeLevelUpSound } = useLevelSound('/levelup.wav');
+  const { playLevelUpSound, primeLevelUpSound } = useLevelSound(`${import.meta.env.BASE_URL}levelup.wav`);
 
   const tournamentIsActive = page === 'timer' || page === 'round' || page === 'control';
   useWakeLock(tournamentIsActive);

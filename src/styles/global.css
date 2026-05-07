@@ -707,7 +707,7 @@ td input {
 }
 
 .small-note {
-  font-size: calc(1rem * var(--position-scale));
+  font-size: calc(1.8rem * var(--position-scale));
   color: var(--muted);
 }
 

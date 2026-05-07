@@ -1,12 +1,16 @@
 /* ================================
    Control panel tablet layout
 
-   Robust struktur:
+   Struktur:
    - .control-page er hoved-grid
    - .control-left-column inneholder timer, status og knapper
    - .control-right-column inneholder rundepanel/spillerkort
-   - Dette overstyrer gamle regler i controlPage.css som kunne dytte
-     rundepanelet ned på iPad/tablet
+
+   Mål:
+   - Funke stabilt på tablets/iPad i ulike størrelser
+   - Pot/Runde/Spillere holdes på venstre side
+   - Rundepanel starter øverst på høyre side
+   - Spillerkortene er kompakte nok til å få plass uten unødvendig scrolling
 ================================ */
 
 /* ================================
@@ -59,10 +63,9 @@
 /* ================================
    Tablet og større
 
-   Viktig:
-   Dette bruker wrapper-kolonner i stedet for å la hvert enkelt panel
-   auto-plasseres i grid. Dermed kan Pot/Runde/Spillere ikke hoppe
-   til høyre side, og rundepanelet starter alltid øverst.
+   Bruker wrapper-kolonner i stedet for auto-placement.
+   Dette hindrer at Pot/Runde/Spillere hopper til høyre,
+   og tvinger rundepanelet til å starte øverst.
 ================================ */
 
 @media (min-width: 600px) and (min-height: 500px) {
@@ -118,139 +121,114 @@
   }
 
   /* Venstre topp: timer/blinds/start/level */
+
   .control-page-tablet-priority .control-hero {
     flex: 0 0 auto;
 
-    padding: 10px;
-    gap: 7px;
+    padding: 9px;
+    gap: 6px;
     min-width: 0;
     min-height: 0;
   }
 
+  .control-page-tablet-priority .control-level-pill {
+    padding: 5px 9px;
+    font-size: 0.66rem;
+  }
+
+  .control-page-tablet-priority .control-time {
+    font-size: clamp(2.25rem, 7.5dvh, 4.4rem);
+    line-height: 0.9;
+  }
+
+  .control-page-tablet-priority .control-blinds {
+    gap: 8px;
+  }
+
+  .control-page-tablet-priority .control-blinds span {
+    font-size: 0.62rem;
+  }
+
+  .control-page-tablet-priority .control-blinds strong {
+    font-size: clamp(1.5rem, 4.8dvh, 2.8rem);
+  }
+
+  .control-page-tablet-priority .control-blind-divider {
+    font-size: clamp(1.35rem, 4.4dvh, 2.5rem);
+  }
+
+  .control-page-tablet-priority .control-next-level {
+    font-size: 0.74rem;
+  }
+
+  .control-page-tablet-priority .control-big-btn {
+    min-height: 42px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+  }
+
+  .control-page-tablet-priority .control-level-actions {
+    gap: 6px;
+  }
+
+  .control-page-tablet-priority .control-wide-btn {
+    min-height: 36px;
+    padding: 7px 9px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+  }
+
   /* Venstre midt: Pot / Runde / Spillere */
+
   .control-page-tablet-priority .control-status-grid {
     flex: 0 0 auto;
 
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 7px;
+    gap: 6px;
     min-width: 0;
   }
 
+  .control-page-tablet-priority .control-status-card {
+    padding: 6px 4px;
+    min-width: 0;
+  }
+
+  .control-page-tablet-priority .control-status-label {
+    font-size: 0.5rem;
+    margin-bottom: 3px;
+    letter-spacing: 0.06em;
+  }
+
+  .control-page-tablet-priority .control-status-value {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
   /* Venstre bunn: Til timer / fullscreen / room / sync */
+
   .control-page-tablet-priority .control-side-actions {
     flex: 1 1 auto;
 
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
     min-width: 0;
     min-height: 0;
     overflow: auto;
-  }
-
-  /* Høyre side: rundepanel/spillerkort */
-  .control-page-tablet-priority .control-right-column > .control-round-panel {
-    flex: 1 1 auto;
-
-    width: 100%;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-    max-height: none;
-
-    margin: 0;
-    padding: 8px;
-    overflow: auto;
-    align-self: stretch;
-
-    /* Overstyrer gamle grid-regler fra controlPage.css */
-    grid-column: auto;
-    grid-row: auto;
-  }
-
-  .control-page-tablet-priority .control-mini-timer {
-    display: none;
-  }
-
-  /* ================================
-     Venstre kolonne sizing
-  ================================ */
-
-  .control-page-tablet-priority .control-level-pill {
-    padding: 5px 9px;
-    font-size: 0.68rem;
-  }
-
-  .control-page-tablet-priority .control-time {
-    font-size: clamp(2.4rem, 8dvh, 4.8rem);
-    line-height: 0.9;
-  }
-
-  .control-page-tablet-priority .control-blinds {
-    gap: 9px;
-  }
-
-  .control-page-tablet-priority .control-blinds span {
-    font-size: 0.66rem;
-  }
-
-  .control-page-tablet-priority .control-blinds strong {
-    font-size: clamp(1.65rem, 5dvh, 3rem);
-  }
-
-  .control-page-tablet-priority .control-blind-divider {
-    font-size: clamp(1.5rem, 4.6dvh, 2.7rem);
-  }
-
-  .control-page-tablet-priority .control-next-level {
-    font-size: 0.78rem;
-  }
-
-  .control-page-tablet-priority .control-big-btn {
-    min-height: 46px;
-    border-radius: 15px;
-    font-size: 1.2rem;
-  }
-
-  .control-page-tablet-priority .control-level-actions {
-    gap: 7px;
-  }
-
-  .control-page-tablet-priority .control-wide-btn {
-    min-height: 40px;
-    padding: 8px 10px;
-    border-radius: 13px;
-    font-size: 0.86rem;
-  }
-
-  .control-page-tablet-priority .control-status-card {
-    padding: 8px 5px;
-    min-width: 0;
-  }
-
-  .control-page-tablet-priority .control-status-label {
-    font-size: 0.56rem;
-    margin-bottom: 3px;
-    letter-spacing: 0.07em;
-  }
-
-  .control-page-tablet-priority .control-status-value {
-    font-size: 1.18rem;
-    line-height: 1;
   }
 
   .control-page-tablet-priority .control-side-actions .btn {
-    min-height: 36px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    font-size: 0.82rem;
+    min-height: 32px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    font-size: 0.72rem;
   }
 
   .control-page-tablet-priority .control-side-room {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
     margin-top: 0;
     opacity: 0.8;
   }
@@ -261,9 +239,30 @@
     justify-content: center;
   }
 
-  /* ================================
-     Høyre rundepanel / spillerkort
-  ================================ */
+  .control-page-tablet-priority .control-mini-timer {
+    display: none;
+  }
+
+  /* Høyre side: rundepanel/spillerkort */
+
+  .control-page-tablet-priority .control-right-column > .control-round-panel {
+    flex: 1 1 auto;
+
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-height: none;
+
+    margin: 0;
+    padding: 6px;
+    overflow: auto;
+    align-self: stretch;
+
+    /* Overstyrer gamle grid-regler fra controlPage.css */
+    grid-column: auto;
+    grid-row: auto;
+  }
 
   .control-page-tablet-priority .round-panel-inner-control {
     display: flex;
@@ -272,7 +271,7 @@
   }
 
   .control-page-tablet-priority .control-round-compact-head {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
   .control-page-tablet-priority .control-round-compact-head .street-tabs {
@@ -280,201 +279,233 @@
   }
 
   .control-page-tablet-priority .street-tabs {
-    gap: 5px;
+    gap: 3px;
+    margin-bottom: 4px;
   }
 
   .control-page-tablet-priority .street-tab {
-    padding: 5px 7px;
-    font-size: 0.68rem;
+    padding: 4px 6px;
+    font-size: 0.58rem;
   }
 
   .control-page-tablet-priority .round-chip-grid {
-    grid-template-columns: repeat(auto-fit, minmax(205px, 1fr));
-    gap: 7px;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 5px;
+    margin-top: 4px;
     align-content: start;
   }
 
   .control-page-tablet-priority .round-player-card {
-    padding: 8px;
-    border-radius: 13px;
+    padding: 6px;
+    border-radius: 10px;
   }
 
   .control-page-tablet-priority .round-player-head {
-    margin-bottom: 7px;
-    gap: 6px;
+    margin-bottom: 4px;
+    gap: 4px;
   }
 
   .control-page-tablet-priority .round-player-name {
-    font-size: 0.9rem;
+    font-size: 0.78rem;
   }
 
   .control-page-tablet-priority .round-player-meta,
   .control-page-tablet-priority .round-player-stack {
-    font-size: 0.72rem;
+    font-size: 0.62rem;
   }
 
   .control-page-tablet-priority .chip-row {
-    gap: 5px;
+    gap: 3px;
   }
 
   .control-page-tablet-priority .chip-control {
-    grid-template-columns: 26px 42px 26px;
-    gap: 3px;
+    grid-template-columns: 20px 34px 20px;
+    gap: 2px;
   }
 
   .control-page-tablet-priority .chip-minus-btn,
   .control-page-tablet-priority .chip-plus-btn {
-    width: 26px;
-    height: 34px;
-    border-radius: 9px;
-    font-size: 0.95rem;
+    width: 20px;
+    height: 27px;
+    border-radius: 7px;
+    font-size: 0.78rem;
   }
 
   .control-page-tablet-priority .chip-btn {
-    width: 42px;
-    height: 42px;
+    width: 34px;
+    height: 34px;
     border-width: 2px;
-    font-size: 0.72rem;
-  }
-
-  .control-page-tablet-priority .chip-count {
-    min-width: 17px;
-    height: 17px;
     font-size: 0.62rem;
   }
 
+  .control-page-tablet-priority .chip-count {
+    min-width: 14px;
+    height: 14px;
+    font-size: 0.52rem;
+    top: -4px;
+    right: -2px;
+    padding: 0 4px;
+  }
+
   .control-page-tablet-priority .round-player-summary {
-    margin-top: 6px;
-    font-size: 0.74rem;
+    margin-top: 4px;
+    gap: 4px;
+    font-size: 0.62rem;
   }
 
   .control-page-tablet-priority .round-player-controls {
-    margin-top: 6px;
-    gap: 6px;
+    margin-top: 4px;
+    gap: 4px;
   }
 
   .control-page-tablet-priority .inline-check {
-    padding: 6px 8px;
-    border-radius: 9px;
-    font-size: 0.76rem;
+    padding: 4px 6px;
+    border-radius: 7px;
+    font-size: 0.62rem;
+    gap: 5px;
   }
 
   .control-page-tablet-priority .round-panel-footer {
-    margin-top: auto;
-    padding-top: 7px;
+    margin-top: 5px;
+    padding-top: 5px;
   }
 
   .control-page-tablet-priority .round-panel-footer .btn {
-    min-height: 36px;
-    padding: 8px 10px;
-    border-radius: 11px;
-    font-size: 0.82rem;
+    min-height: 30px;
+    padding: 6px 8px;
+    font-size: 0.68rem;
+    border-radius: 8px;
   }
 
   .control-page-tablet-priority .winners-panel {
-    margin-top: 7px;
-    padding: 9px;
+    margin-top: 6px;
+    padding: 7px;
   }
 
   .control-page-tablet-priority .winner-group {
-    margin-top: 7px;
-    padding: 9px;
+    margin-top: 6px;
+    padding: 7px;
   }
 
   .control-page-tablet-priority .winner-checkboxes {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 5px;
   }
 
   .control-page-tablet-priority .winner-checkboxes label {
-    padding: 7px 8px;
-    font-size: 0.8rem;
+    padding: 6px 7px;
+    font-size: 0.7rem;
   }
 }
 
 /* ================================
    Smal tablet / liten skjerm
 
-   Fortsatt to kolonner, men venstre kolonne gjøres smalere.
+   Fortsatt to kolonner, men venstre kolonne blir smalere
+   og spillerkortene enda mer kompakte.
 ================================ */
 
 @media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
   .control-page.control-page-tablet-priority {
-    grid-template-columns: clamp(200px, 30vw, 260px) minmax(0, 1fr);
-    gap: 6px;
+    grid-template-columns: clamp(195px, 29vw, 250px) minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .control-page-tablet-priority .control-left-column {
+    gap: 5px;
   }
 
   .control-page-tablet-priority .control-hero {
-    padding: 8px;
-    gap: 6px;
+    padding: 7px;
+    gap: 5px;
   }
 
   .control-page-tablet-priority .control-time {
-    font-size: clamp(2.1rem, 7dvh, 3.8rem);
+    font-size: clamp(2rem, 6.8dvh, 3.5rem);
   }
 
   .control-page-tablet-priority .control-big-btn {
-    min-height: 40px;
-    font-size: 1.02rem;
+    min-height: 36px;
+    font-size: 0.94rem;
   }
 
   .control-page-tablet-priority .control-wide-btn {
-    min-height: 34px;
-    font-size: 0.76rem;
+    min-height: 31px;
+    font-size: 0.7rem;
   }
 
   .control-page-tablet-priority .control-status-grid {
-    gap: 5px;
+    gap: 4px;
   }
 
   .control-page-tablet-priority .control-status-card {
-    padding: 6px 3px;
+    padding: 5px 3px;
   }
 
   .control-page-tablet-priority .control-status-label {
-    font-size: 0.48rem;
+    font-size: 0.44rem;
   }
 
   .control-page-tablet-priority .control-status-value {
-    font-size: 0.98rem;
+    font-size: 0.9rem;
   }
 
   .control-page-tablet-priority .control-side-actions {
-    gap: 5px;
+    gap: 4px;
   }
 
   .control-page-tablet-priority .control-side-actions .btn {
-    min-height: 32px;
-    font-size: 0.74rem;
+    min-height: 29px;
+    font-size: 0.68rem;
   }
 
   .control-page-tablet-priority .control-right-column > .control-round-panel {
-    padding: 6px;
+    padding: 5px;
   }
 
   .control-page-tablet-priority .round-chip-grid {
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 4px;
   }
 
   .control-page-tablet-priority .round-player-card {
-    padding: 7px;
+    padding: 5px;
+  }
+
+  .control-page-tablet-priority .round-player-name {
+    font-size: 0.72rem;
+  }
+
+  .control-page-tablet-priority .round-player-meta,
+  .control-page-tablet-priority .round-player-stack {
+    font-size: 0.58rem;
   }
 
   .control-page-tablet-priority .chip-control {
-    grid-template-columns: 24px 38px 24px;
-    gap: 3px;
+    grid-template-columns: 18px 31px 18px;
+    gap: 2px;
   }
 
   .control-page-tablet-priority .chip-minus-btn,
   .control-page-tablet-priority .chip-plus-btn {
-    width: 24px;
-    height: 31px;
+    width: 18px;
+    height: 24px;
+    font-size: 0.7rem;
   }
 
   .control-page-tablet-priority .chip-btn {
-    width: 38px;
-    height: 38px;
+    width: 31px;
+    height: 31px;
+    font-size: 0.56rem;
+  }
+
+  .control-page-tablet-priority .round-player-summary {
+    font-size: 0.56rem;
+  }
+
+  .control-page-tablet-priority .inline-check {
+    padding: 3px 5px;
+    font-size: 0.56rem;
   }
 }
 

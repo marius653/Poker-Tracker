@@ -131,6 +131,23 @@ export default function RoundPanelContent({
     });
   }
 
+  const streetTabs = (
+    <div className="street-tabs">
+      {STREETS.map((street, index) => (
+        <div
+          className={`street-tab ${streetIndex === index ? 'active' : ''}`}
+          key={street}
+        >
+          {street.toUpperCase()}
+        </div>
+      ))}
+
+      <div className={`street-tab ${!currentStreet ? 'active' : ''}`}>
+        SHOWDOWN
+      </div>
+    </div>
+  );
+
   return (
     <div className={`round-panel-inner ${isControlVariant ? 'round-panel-inner-control' : ''}`}>
       {!isControlVariant && (
@@ -158,39 +175,7 @@ export default function RoundPanelContent({
         </div>
       )}
 
-      {isControlVariant ? (
-        <div className="control-round-compact-head">
-          <div className="street-tabs">
-            {STREETS.map((street, index) => (
-              <div
-                className={`street-tab ${streetIndex === index ? 'active' : ''}`}
-                key={street}
-              >
-                {street.toUpperCase()}
-              </div>
-            ))}
-
-            <div className={`street-tab ${!currentStreet ? 'active' : ''}`}>
-              SHOWDOWN
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="street-tabs">
-          {STREETS.map((street, index) => (
-            <div
-              className={`street-tab ${streetIndex === index ? 'active' : ''}`}
-              key={street}
-            >
-              {street.toUpperCase()}
-            </div>
-          ))}
-
-          <div className={`street-tab ${!currentStreet ? 'active' : ''}`}>
-            SHOWDOWN
-          </div>
-        </div>
-      )}
+      {!isControlVariant && streetTabs}
 
       {currentStreet ? (
         <div className="round-chip-grid">

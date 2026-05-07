@@ -553,3 +553,38 @@
     overflow: visible;
   }
 }
+
+/* ================================
+   Tablet control scale
+
+   Skalerer hele kontrollpanelet ned på tablet,
+   uten å være avhengig av browser-zoom på iPad.
+================================ */
+
+@media (min-width: 600px) and (min-height: 500px) {
+  .control-page.control-page-tablet-priority {
+    --control-tablet-scale: 0.88;
+
+    transform: scale(var(--control-tablet-scale));
+    transform-origin: top left;
+
+    width: calc(100% / var(--control-tablet-scale));
+    height: calc((100dvh - 16px) / var(--control-tablet-scale));
+  }
+}
+
+/* Litt mer nedskalering for smalere tablets */
+@media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
+  .control-page.control-page-tablet-priority {
+    --control-tablet-scale: 0.82;
+  }
+}
+
+/* Ikke skaler på mobil */
+@media (max-width: 599px), (max-height: 499px) {
+  .control-page.control-page-tablet-priority {
+    transform: none;
+    width: 100%;
+    height: auto;
+  }
+}

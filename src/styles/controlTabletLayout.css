@@ -123,8 +123,8 @@
   }
 }
 
-@media (max-width: 699px), (min-height: 951px) {
-  .control-page-tablet-priority .control-side-actions {
-    display: none;
-  }
+.control-page-tablet-priority .control-side-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

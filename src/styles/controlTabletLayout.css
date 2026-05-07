@@ -1,42 +1,34 @@
 /* ================================
-   Control panel tablet-only layout
+   iPad Air 2 control panel layout
 
-   Dette kontrollpanelet er laget for tablet.
-   Ingen mobil-fallback, ingen orientation-regler, ingen høyde-detektering.
+   Target:
+   - iPad Air 2 / 9.7" Safari landscape
+   - CSS viewport approx. 1024 x 768
+   - 6 players
+   - Tablet-only control panel
 
-   Stabil rollback-versjon:
-   - Venstre kolonne er fysisk wrapper: timer/status/knapper.
-   - Høyre kolonne er fysisk wrapper: rundepanel/spillerkort.
-   - Hele kontrollpanelet kan skaleres med Skjerm -> Kontrollpanel.
+   Layout:
+   - Left column: timer, status, navigation
+   - Right column: round panel / player cards
+   - Player cards: fixed 2-column grid, ideal for 6 players as 2 x 3
+   - No transform scale and no responsive fallback rules
 ================================ */
 
-.app-shell:has(.control-page-tablet-priority) {
-  height: 100dvh;
-  overflow: hidden;
-  padding: 6px;
-  align-items: stretch;
-}
-
-/* Juster via Skjerm -> Kontrollpanel */
+/* Main page frame */
 .control-page.control-page-tablet-priority {
-  --control-scale: var(--control-panel-scale, 0.84);
-
-  width: calc(100% / var(--control-scale));
-  height: calc((100dvh - 12px) / var(--control-scale));
+  width: 100%;
+  height: calc(100vh - 48px);
   min-height: 0;
   overflow: hidden;
 
-  transform: scale(var(--control-scale));
-  transform-origin: top left;
-
   display: grid;
-  grid-template-columns: 245px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   gap: 6px;
   align-items: stretch;
 }
 
-/* Venstre kolonne */
+/* Physical left column */
 .control-page-tablet-priority .control-left-column {
   grid-column: 1;
   grid-row: 1;
@@ -51,7 +43,7 @@
   overflow: hidden;
 }
 
-/* Høyre kolonne */
+/* Physical right column */
 .control-page-tablet-priority .control-right-column {
   grid-column: 2;
   grid-row: 1;
@@ -65,31 +57,33 @@
   overflow: hidden;
 }
 
-/* Skjul ting som ikke trengs i tablet control */
+/* Hide elements that are not needed in tablet control mode */
 .control-page-tablet-priority .control-topbar,
 .control-page-tablet-priority .control-mini-timer {
   display: none;
 }
 
 /* ================================
-   Venstre: timer / blinds / level
+   Left column: timer / blinds
 ================================ */
 
 .control-page-tablet-priority .control-hero {
   flex: 0 0 auto;
-  padding: 7px;
-  gap: 5px;
+
   min-width: 0;
   min-height: 0;
+  padding: 7px;
+  gap: 5px;
 }
 
 .control-page-tablet-priority .control-level-pill {
   padding: 4px 8px;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
 }
 
 .control-page-tablet-priority .control-time {
-  font-size: clamp(2rem, 7dvh, 3.8rem);
+  font-size: 2.65rem;
   line-height: 0.9;
 }
 
@@ -98,25 +92,25 @@
 }
 
 .control-page-tablet-priority .control-blinds span {
-  font-size: 0.58rem;
+  font-size: 0.56rem;
 }
 
 .control-page-tablet-priority .control-blinds strong {
-  font-size: clamp(1.35rem, 4.5dvh, 2.5rem);
+  font-size: 1.85rem;
 }
 
 .control-page-tablet-priority .control-blind-divider {
-  font-size: clamp(1.25rem, 4dvh, 2.2rem);
+  font-size: 1.7rem;
 }
 
 .control-page-tablet-priority .control-next-level {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
 }
 
 .control-page-tablet-priority .control-big-btn {
   min-height: 36px;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.98rem;
 }
 
 .control-page-tablet-priority .control-level-actions {
@@ -127,11 +121,11 @@
   min-height: 31px;
   padding: 6px 8px;
   border-radius: 10px;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
 }
 
 /* ================================
-   Venstre: Pot / Runde / Spillere
+   Left column: Pot / Runde / Spillere
 ================================ */
 
 .control-page-tablet-priority .control-status-grid {
@@ -149,18 +143,18 @@
 }
 
 .control-page-tablet-priority .control-status-label {
-  font-size: 0.44rem;
+  font-size: 0.42rem;
   margin-bottom: 2px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .control-page-tablet-priority .control-status-value {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1;
 }
 
 /* ================================
-   Venstre: navigasjon / room
+   Left column: buttons / room
 ================================ */
 
 .control-page-tablet-priority .control-side-actions {
@@ -178,7 +172,7 @@
   min-height: 29px;
   padding: 5px 7px;
   border-radius: 9px;
-  font-size: 0.66rem;
+  font-size: 0.64rem;
 }
 
 .control-page-tablet-priority .control-side-actions .control-nav-btn {
@@ -201,7 +195,7 @@
 }
 
 /* ================================
-   Høyre: rundepanel / spillerkort
+   Right column: round panel
 ================================ */
 
 .control-page-tablet-priority .control-right-column > .control-round-panel {
@@ -218,6 +212,7 @@
   overflow: auto;
   align-self: stretch;
 
+  /* Override old grid rules from controlPage.css */
   grid-column: auto;
   grid-row: auto;
 }
@@ -243,12 +238,19 @@
 
 .control-page-tablet-priority .street-tab {
   padding: 3px 5px;
-  font-size: 0.54rem;
+  font-size: 0.52rem;
 }
 
-/* Spillerkort-grid */
+/* ================================
+   Right column: player cards
+
+   2 columns fits iPad Air 2 landscape well:
+   right column is roughly 730-760 CSS px depending on browser chrome.
+================================ */
+
 .control-page-tablet-priority .round-chip-grid {
-  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
   margin-top: 3px;
   align-content: start;
@@ -262,6 +264,7 @@
 .control-page-tablet-priority .round-player-head {
   margin-bottom: 3px;
   gap: 3px;
+  flex-wrap: nowrap;
 }
 
 .control-page-tablet-priority .round-player-name {
@@ -270,12 +273,17 @@
 
 .control-page-tablet-priority .round-player-meta,
 .control-page-tablet-priority .round-player-stack {
-  font-size: 0.56rem;
+  font-size: 0.55rem;
 }
 
-/* Chip-kontroller */
+.control-page-tablet-priority .round-player-stack {
+  white-space: nowrap;
+}
+
+/* Chip controls */
 .control-page-tablet-priority .chip-row {
   gap: 2px;
+  flex-wrap: wrap;
 }
 
 .control-page-tablet-priority .chip-control {
@@ -288,14 +296,14 @@
   width: 18px;
   height: 24px;
   border-radius: 6px;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
 }
 
 .control-page-tablet-priority .chip-btn {
   width: 31px;
   height: 31px;
   border-width: 2px;
-  font-size: 0.56rem;
+  font-size: 0.54rem;
 }
 
 .control-page-tablet-priority .chip-count {
@@ -310,7 +318,7 @@
 .control-page-tablet-priority .round-player-summary {
   margin-top: 3px;
   gap: 3px;
-  font-size: 0.56rem;
+  font-size: 0.55rem;
 }
 
 .control-page-tablet-priority .round-player-controls {
@@ -321,7 +329,7 @@
 .control-page-tablet-priority .inline-check {
   padding: 3px 5px;
   border-radius: 6px;
-  font-size: 0.56rem;
+  font-size: 0.55rem;
   gap: 4px;
 }
 
@@ -334,7 +342,7 @@
 .control-page-tablet-priority .round-panel-footer .btn {
   min-height: 28px;
   padding: 5px 7px;
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   border-radius: 7px;
 }
 
@@ -350,11 +358,11 @@
 }
 
 .control-page-tablet-priority .winner-checkboxes {
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
 }
 
 .control-page-tablet-priority .winner-checkboxes label {
   padding: 5px 6px;
-  font-size: 0.66rem;
+  font-size: 0.64rem;
 }

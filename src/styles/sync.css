@@ -1,0 +1,69 @@
+/* ================================
+   Firebase sync UI
+================================ */
+
+.sync-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--muted);
+  font-weight: 900;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.sync-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #808896;
+  box-shadow: 0 0 12px rgba(128, 136, 150, 0.4);
+}
+
+.sync-status-badge.connected .sync-status-dot {
+  background: #3abf7a;
+  box-shadow: 0 0 14px rgba(58, 191, 122, 0.6);
+}
+
+.sync-status-badge.connecting .sync-status-dot {
+  background: #c9a227;
+  box-shadow: 0 0 14px rgba(201, 162, 39, 0.6);
+}
+
+.sync-status-badge.error .sync-status-dot {
+  background: #e95c61;
+  box-shadow: 0 0 14px rgba(233, 92, 97, 0.65);
+}
+
+.join-room-modal {
+  max-width: 520px;
+}
+
+.join-room-modal input {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 900;
+  font-size: 1.25rem;
+}
+
+.setup-with-room-actions {
+  width: min(1600px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setup-room-actions {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}

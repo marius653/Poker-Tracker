@@ -1,5 +1,6 @@
 import RoomBadge from './RoomBadge.jsx';
 import RoundPanelContent from './RoundPanelContent.jsx';
+import SyncStatusBadge from './SyncStatusBadge.jsx';
 import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
 import { changeLevel, toggleTimer } from '../state/actions.js';
@@ -9,6 +10,7 @@ import '../styles/controlPage.css';
 
 export default function ControlPage({
   roomId,
+  syncStatus,
   tournamentState,
   setTournamentState,
   onBackToTimer,
@@ -36,7 +38,10 @@ export default function ControlPage({
           &larr; Timer
         </button>
 
-        <RoomBadge roomId={roomId} />
+        <div className="button-cluster">
+          <RoomBadge roomId={roomId} />
+          <SyncStatusBadge status={syncStatus} />
+        </div>
 
         <button type="button" className="btn btn-gray control-nav-btn" onClick={onOpenRoundPage}>
           Rundeside

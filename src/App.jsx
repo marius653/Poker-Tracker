@@ -1,7 +1,9 @@
 import './styles/room.css';
+import './styles/sync.css';
 
 import { useEffect, useState } from 'react';
 import ControlPage from './components/ControlPage.jsx';
+import JoinRoomModal from './components/JoinRoomModal.jsx';
 import RoundPage from './components/RoundPage.jsx';
 import SetupPage from './components/SetupPage.jsx';
 import TimerPage from './components/TimerPage.jsx';
@@ -9,13 +11,18 @@ import { useLevelSound } from './hooks/useLevelSound.js';
 import { useWakeLock } from './hooks/useWakeLock.js';
 import { startTournamentFromSetup, updateTimerFromClock } from './state/actions.js';
 import { createInitialTournamentState } from './state/initialState.js';
-import { getOrCreateRoomId, resetRoomId } from './sync/roomId.js';
+import {
+  getOrCreateRoomId,
+  resetRoomId,
+  setStoredRoomId,
+} from './sync/roomId.js';
 import {
   clearLocalRoomState,
   loadActiveRoomData,
   loadLocalRoomState,
   saveLocalRoomState,
 } from './sync/localRoomStorage.js';
+import { useFirebaseRoomSync } from './sync/useFirebaseRoomSync.js';
 
 function getInitialRoomData() {
   const activeRoomData = loadActiveRoomData();
@@ -42,11 +49,19 @@ export default function App() {
   const [tournamentState, setTournamentState] = useState(() => {
     return initialRoomData.tournamentState || createInitialTournamentState();
   });
+  const [joinRoomModalOpen, setJoinRoomModalOpen] = useState(false);
 
   const { playLevelUpSound, primeLevelUpSound } = useLevelSound('/levelup.wav');
 
   const tournamentIsActive = page === 'timer' || page === 'round' || page === 'control';
   useWakeLock(tournamentIsActive);
+
+  const { syncStatus } = useFirebaseRoomSync({
+    enabled: tournamentIsActive,
+    roomId,
+    tournamentState,
+    setTournamentState,
+  });
 
   useEffect(() => {
     saveLocalRoomState(roomId, {
@@ -107,16 +122,38 @@ export default function App() {
     setPage('setup');
   }
 
+  function handleJoinRoom(nextRoomId) {
+    const storedRoomId = setStoredRoomId(nextRoomId);
+
+    if (!storedRoomId) return;
+
+    setRoomId(storedRoomId);
+    setTournamentState(createInitialTournamentState());
+    setPage('control');
+    setJoinRoomModalOpen(false);
+  }
+
+  const sharedPageProps = {
+    roomId,
+    syncStatus,
+    tournamentState,
+    setTournamentState,
+    onLevelChangeSound: playLevelUpSound,
+  };
+
   if (page === 'control') {
     return (
       <main className="app-shell">
         <ControlPage
-          roomId={roomId}
-          tournamentState={tournamentState}
-          setTournamentState={setTournamentState}
+          {...sharedPageProps}
           onBackToTimer={() => setPage('timer')}
           onOpenRoundPage={() => setPage('round')}
-          onLevelChangeSound={playLevelUpSound}
+        />
+
+        <JoinRoomModal
+          isOpen={joinRoomModalOpen}
+          onClose={() => setJoinRoomModalOpen(false)}
+          onJoinRoom={handleJoinRoom}
         />
       </main>
     );
@@ -127,9 +164,16 @@ export default function App() {
       <main className="app-shell">
         <RoundPage
           roomId={roomId}
+          syncStatus={syncStatus}
           tournamentState={tournamentState}
           setTournamentState={setTournamentState}
           onBackToTimer={() => setPage('timer')}
+        />
+
+        <JoinRoomModal
+          isOpen={joinRoomModalOpen}
+          onClose={() => setJoinRoomModalOpen(false)}
+          onJoinRoom={handleJoinRoom}
         />
       </main>
     );
@@ -139,14 +183,18 @@ export default function App() {
     return (
       <main className="app-shell">
         <TimerPage
-          roomId={roomId}
-          tournamentState={tournamentState}
-          setTournamentState={setTournamentState}
+          {...sharedPageProps}
           onReset={handleReset}
           onNewRoom={handleNewRoom}
-          onLevelChangeSound={playLevelUpSound}
           onOpenRoundPage={() => setPage('round')}
           onOpenControlPage={() => setPage('control')}
+          onOpenJoinRoom={() => setJoinRoomModalOpen(true)}
+        />
+
+        <JoinRoomModal
+          isOpen={joinRoomModalOpen}
+          onClose={() => setJoinRoomModalOpen(false)}
+          onJoinRoom={handleJoinRoom}
         />
       </main>
     );
@@ -154,7 +202,28 @@ export default function App() {
 
   return (
     <main className="app-shell">
-      <SetupPage onStartTournament={handleStartTournament} />
+      <div className="setup-with-room-actions">
+        <div className="setup-room-actions panel">
+          <div>
+            <h3>Bli med fra iPad?</h3>
+            <p className="muted">
+              For kontrollside på en annen enhet: skriv inn room code fra PC-en.
+            </p>
+          </div>
+
+          <button type="button" className="btn btn-gray" onClick={() => setJoinRoomModalOpen(true)}>
+            Bli med i rom
+          </button>
+        </div>
+
+        <SetupPage onStartTournament={handleStartTournament} />
+      </div>
+
+      <JoinRoomModal
+        isOpen={joinRoomModalOpen}
+        onClose={() => setJoinRoomModalOpen(false)}
+        onJoinRoom={handleJoinRoom}
+      />
     </main>
   );
 }

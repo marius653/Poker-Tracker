@@ -6,6 +6,7 @@ import PositionBoard from './PositionBoard.jsx';
 import RoomBadge from './RoomBadge.jsx';
 import RoundPanel from './RoundPanel.jsx';
 import StackModal from './StackModal.jsx';
+import SyncStatusBadge from './SyncStatusBadge.jsx';
 import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
 import { changeLevel, saveEditedStacks, toggleTimer } from '../state/actions.js';
@@ -13,6 +14,7 @@ import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
 
 export default function TimerPage({
   roomId,
+  syncStatus,
   tournamentState,
   setTournamentState,
   onReset,
@@ -20,6 +22,7 @@ export default function TimerPage({
   onLevelChangeSound,
   onOpenRoundPage,
   onOpenControlPage,
+  onOpenJoinRoom,
 }) {
   const [stackModalOpen, setStackModalOpen] = useState(false);
   const [handRankingsOpen, setHandRankingsOpen] = useState(false);
@@ -76,7 +79,10 @@ export default function TimerPage({
           </button>
         </div>
 
-        <RoomBadge roomId={roomId} />
+        <div className="button-cluster">
+          <RoomBadge roomId={roomId} />
+          <SyncStatusBadge status={syncStatus} />
+        </div>
 
         <div className="button-cluster">
           <button type="button" className="btn btn-gray" onClick={() => setRoundPanelOpen(true)}>
@@ -96,6 +102,9 @@ export default function TimerPage({
           </button>
           <button type="button" className="btn btn-gray" onClick={() => setStackModalOpen(true)}>
             Endre stacks
+          </button>
+          <button type="button" className="btn btn-gray" onClick={onOpenJoinRoom}>
+            Bli med
           </button>
           <button type="button" className="btn btn-gray" onClick={onNewRoom}>
             Nytt rom

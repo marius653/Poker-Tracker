@@ -1,5 +1,13 @@
 const ROOM_ID_KEY = 'pokerTimerRoomId';
 
+export function normalizeRoomId(value) {
+  return String(value || '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '')
+    .slice(0, 12);
+}
+
 export function createRoomId() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let id = '';
@@ -20,6 +28,16 @@ export function getOrCreateRoomId() {
   localStorage.setItem(ROOM_ID_KEY, roomId);
 
   return roomId;
+}
+
+export function setStoredRoomId(roomId) {
+  const normalizedRoomId = normalizeRoomId(roomId);
+
+  if (!normalizedRoomId) return null;
+
+  localStorage.setItem(ROOM_ID_KEY, normalizedRoomId);
+
+  return normalizedRoomId;
 }
 
 export function resetRoomId() {

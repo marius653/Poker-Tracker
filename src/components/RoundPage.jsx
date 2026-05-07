@@ -1,9 +1,11 @@
 import RoomBadge from './RoomBadge.jsx';
 import RoundPanelContent from './RoundPanelContent.jsx';
+import SyncStatusBadge from './SyncStatusBadge.jsx';
 import '../styles/roundPanel.css';
 
 export default function RoundPage({
   roomId,
+  syncStatus,
   tournamentState,
   setTournamentState,
   onBackToTimer,
@@ -15,7 +17,10 @@ export default function RoundPage({
           &larr; Til timer
         </button>
 
-        <RoomBadge roomId={roomId} label="Room" />
+        <div className="button-cluster">
+          <RoomBadge roomId={roomId} label="Room" />
+          <SyncStatusBadge status={syncStatus} />
+        </div>
 
         <div className="round-page-title">
           Rundeside

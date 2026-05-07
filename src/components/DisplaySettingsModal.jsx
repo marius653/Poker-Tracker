@@ -51,8 +51,8 @@ const SETTINGS = [
   },
   {
     key: 'controlPanelScale',
-    title: 'Kontrollpanel',
-    help: 'Skalerer hele kontrollpanelet på tablet.',
+    title: 'Kontrollkort',
+    help: 'Størrelse på spillerkort og chip-knapper i kontrollpanelet. Kortene legger seg på ny rad ved behov.',
     min: 0.8,
     max: 2,
     step: 0.01,

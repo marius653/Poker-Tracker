@@ -1,13 +1,143 @@
 /* ================================
-   Control panel scale setting
+   Control card scale setting
 
-   Denne filen kobler Skjerm -> Kontrollpanel-slideren
-   til tablet-control-layouten uten å erstatte selve layoutfilen.
+   Denne erstatter den gamle "zoom hele kontrollpanelet"-ideen.
+   Slideren Skjerm -> Kontrollkort skalerer nå spillerkort,
+   chip-knapper og tekst inne i rundepanelet.
 
-   Hvis controlTabletLayout.css bruker --control-scale, overstyrer
-   denne verdien med lagret innstilling fra localStorage.
+   Fordel:
+   - layouten holder seg innenfor høyre kolonne
+   - kortene wrapper automatisk til ny rad når de blir større
+   - ingenting flyter ut av skjermen med transform: scale(...)
 ================================ */
 
 .control-page.control-page-tablet-priority {
-  --control-scale: var(--control-panel-scale, 0.84) !important;
+  /* Behold eksisterende layout, men nøytraliser gammel hel-panel-skalering. */
+  --control-scale: 1 !important;
+  --control-card-scale: var(--control-panel-scale, 1);
+  transform: none !important;
+}
+
+/* Høyre panel skal fortsatt ha normal scroll hvis kortene blir store. */
+.control-page-tablet-priority .control-right-column > .control-round-panel,
+.control-page-tablet-priority > .control-round-panel {
+  overflow: auto;
+}
+
+/* Kort-grid: slideren påvirker kortenes minimumsbredde.
+   Når kortene blir større og det blir for lite plass, legger de seg på ny rad. */
+.control-page-tablet-priority .round-chip-grid {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(150px, calc(165px * var(--control-card-scale)), 360px), 1fr)
+  ) !important;
+  gap: clamp(3px, calc(4px * var(--control-card-scale)), 18px) !important;
+  align-content: start;
+}
+
+.control-page-tablet-priority .round-player-card {
+  padding: clamp(4px, calc(5px * var(--control-card-scale)), 18px) !important;
+  border-radius: clamp(8px, calc(9px * var(--control-card-scale)), 22px) !important;
+}
+
+.control-page-tablet-priority .round-player-head {
+  margin-bottom: clamp(3px, calc(3px * var(--control-card-scale)), 12px) !important;
+  gap: clamp(3px, calc(3px * var(--control-card-scale)), 12px) !important;
+}
+
+.control-page-tablet-priority .round-player-name {
+  font-size: clamp(0.66rem, calc(0.72rem * var(--control-card-scale)), 1.45rem) !important;
+}
+
+.control-page-tablet-priority .round-player-meta,
+.control-page-tablet-priority .round-player-stack {
+  font-size: clamp(0.5rem, calc(0.56rem * var(--control-card-scale)), 1.12rem) !important;
+}
+
+.control-page-tablet-priority .chip-row {
+  gap: clamp(2px, calc(2px * var(--control-card-scale)), 10px) !important;
+}
+
+.control-page-tablet-priority .chip-control {
+  grid-template-columns:
+    clamp(16px, calc(18px * var(--control-card-scale)), 44px)
+    clamp(28px, calc(31px * var(--control-card-scale)), 78px)
+    clamp(16px, calc(18px * var(--control-card-scale)), 44px) !important;
+  gap: clamp(2px, calc(2px * var(--control-card-scale)), 8px) !important;
+}
+
+.control-page-tablet-priority .chip-minus-btn,
+.control-page-tablet-priority .chip-plus-btn {
+  width: clamp(16px, calc(18px * var(--control-card-scale)), 44px) !important;
+  height: clamp(22px, calc(24px * var(--control-card-scale)), 60px) !important;
+  border-radius: clamp(6px, calc(6px * var(--control-card-scale)), 14px) !important;
+  font-size: clamp(0.62rem, calc(0.7rem * var(--control-card-scale)), 1.4rem) !important;
+}
+
+.control-page-tablet-priority .chip-btn {
+  width: clamp(28px, calc(31px * var(--control-card-scale)), 78px) !important;
+  height: clamp(28px, calc(31px * var(--control-card-scale)), 78px) !important;
+  font-size: clamp(0.5rem, calc(0.56rem * var(--control-card-scale)), 1.18rem) !important;
+}
+
+.control-page-tablet-priority .chip-count {
+  min-width: clamp(12px, calc(13px * var(--control-card-scale)), 28px) !important;
+  height: clamp(12px, calc(13px * var(--control-card-scale)), 28px) !important;
+  font-size: clamp(0.44rem, calc(0.48rem * var(--control-card-scale)), 0.95rem) !important;
+  padding: 0 clamp(3px, calc(3px * var(--control-card-scale)), 8px) !important;
+}
+
+.control-page-tablet-priority .round-player-summary {
+  margin-top: clamp(3px, calc(3px * var(--control-card-scale)), 12px) !important;
+  gap: clamp(3px, calc(3px * var(--control-card-scale)), 12px) !important;
+  font-size: clamp(0.5rem, calc(0.56rem * var(--control-card-scale)), 1.08rem) !important;
+}
+
+.control-page-tablet-priority .round-player-controls {
+  margin-top: clamp(3px, calc(3px * var(--control-card-scale)), 12px) !important;
+  gap: clamp(3px, calc(3px * var(--control-card-scale)), 12px) !important;
+}
+
+.control-page-tablet-priority .inline-check {
+  padding:
+    clamp(3px, calc(3px * var(--control-card-scale)), 10px)
+    clamp(5px, calc(5px * var(--control-card-scale)), 16px) !important;
+  border-radius: clamp(6px, calc(6px * var(--control-card-scale)), 16px) !important;
+  font-size: clamp(0.5rem, calc(0.56rem * var(--control-card-scale)), 1.05rem) !important;
+  gap: clamp(4px, calc(4px * var(--control-card-scale)), 12px) !important;
+}
+
+.control-page-tablet-priority .street-tabs {
+  gap: clamp(3px, calc(3px * var(--control-card-scale)), 10px) !important;
+}
+
+.control-page-tablet-priority .street-tab {
+  padding:
+    clamp(3px, calc(3px * var(--control-card-scale)), 10px)
+    clamp(5px, calc(5px * var(--control-card-scale)), 16px) !important;
+  font-size: clamp(0.5rem, calc(0.54rem * var(--control-card-scale)), 1.05rem) !important;
+}
+
+.control-page-tablet-priority .round-panel-footer .btn {
+  min-height: clamp(26px, calc(28px * var(--control-card-scale)), 58px) !important;
+  padding:
+    clamp(5px, calc(5px * var(--control-card-scale)), 14px)
+    clamp(7px, calc(7px * var(--control-card-scale)), 20px) !important;
+  font-size: clamp(0.58rem, calc(0.64rem * var(--control-card-scale)), 1.2rem) !important;
+}
+
+/* Showdown-vinduet følger samme skaleringsidé. */
+.control-page-tablet-priority .winner-checkboxes {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(110px, calc(120px * var(--control-card-scale)), 280px), 1fr)
+  ) !important;
+  gap: clamp(4px, calc(4px * var(--control-card-scale)), 14px) !important;
+}
+
+.control-page-tablet-priority .winner-checkboxes label {
+  padding:
+    clamp(5px, calc(5px * var(--control-card-scale)), 14px)
+    clamp(6px, calc(6px * var(--control-card-scale)), 18px) !important;
+  font-size: clamp(0.58rem, calc(0.66rem * var(--control-card-scale)), 1.2rem) !important;
 }

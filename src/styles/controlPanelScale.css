@@ -1,0 +1,13 @@
+/* ================================
+   Control panel scale setting
+
+   Denne filen kobler Skjerm -> Kontrollpanel-slideren
+   til tablet-control-layouten uten å erstatte selve layoutfilen.
+
+   Hvis controlTabletLayout.css bruker --control-scale, overstyrer
+   denne verdien med lagret innstilling fra localStorage.
+================================ */
+
+.control-page.control-page-tablet-priority {
+  --control-scale: var(--control-panel-scale, 0.84) !important;
+}

@@ -26,6 +26,7 @@ export function useDisplaySettings() {
       '--setup-scale': displaySettings.setupScale,
       '--button-scale': displaySettings.buttonScale,
       '--hand-rankings-scale': displaySettings.handRankingsScale,
+      '--control-panel-scale': displaySettings.controlPanelScale,
     };
 
     Object.entries(cssVariables).forEach(([name, value]) => {

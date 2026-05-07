@@ -1,3 +1,5 @@
+import '../styles/controlPanelScale.css';
+
 const SETTINGS = [
   {
     key: 'timerScale',
@@ -45,6 +47,14 @@ const SETTINGS = [
     help: 'Størrelse på poker hand rankings-vinduet og kortene.',
     min: 0.75,
     max: 1.35,
+    step: 0.01,
+  },
+  {
+    key: 'controlPanelScale',
+    title: 'Kontrollpanel',
+    help: 'Skalerer hele kontrollpanelet på tablet.',
+    min: 0.8,
+    max: 2,
     step: 0.01,
   },
   {

@@ -127,16 +127,18 @@ export default function ControlPage({
         />
       </section>
 
-      <section className="control-round-panel panel">
-        <RoundPanelErrorBoundary>
-          <RoundPanelContent
-            tournamentState={tournamentState}
-            setTournamentState={setTournamentState}
-            onClose={onBackToTimer}
-            variant="control"
-          />
-        </RoundPanelErrorBoundary>
-      </section>
+      <div className="control-right-column">
+        <section className="control-round-panel panel">
+          <RoundPanelErrorBoundary>
+            <RoundPanelContent
+              tournamentState={tournamentState}
+              setTournamentState={setTournamentState}
+              onClose={onBackToTimer}
+              variant="control"
+            />
+          </RoundPanelErrorBoundary>
+        </section>
+      </div>
     </div>
   );
 }

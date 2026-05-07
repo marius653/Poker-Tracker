@@ -1,36 +1,37 @@
 /* ================================
    Control panel tablet layout
 
-   Denne filen overstyrer controlPage.css/controlFitMode.css med en mer robust
-   struktur for tablets. Hovedgrepet er at ControlPage.jsx nå har en faktisk
-   venstre kolonne-wrapper (.control-left-column), slik at statusboksene ikke
-   kan auto-plasseres i høyre kolonne på iPad.
+   Robust struktur:
+   - .control-page er hoved-grid
+   - .control-left-column inneholder timer, status og knapper
+   - .control-right-column inneholder rundepanel/spillerkort
+   - Dette overstyrer gamle regler i controlPage.css som kunne dytte
+     rundepanelet ned på iPad/tablet
+================================ */
 
-   Tablet og større:
-   - Venstre kolonne:
-     1. Timer / blinds / start / level
-     2. Pot / Runde / Spillere
-     3. Til timer / fullscreen / room / sync
-   - Høyre kolonne:
-     Rundepanel / spillerkort
-
-   Mobil / veldig smal skjerm:
-   - Én kolonne
+/* ================================
+   Standard / felles
 ================================ */
 
 .control-page-tablet-priority .control-left-column {
+  min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.control-page-tablet-priority .control-right-column {
   min-width: 0;
   min-height: 0;
+  display: flex;
+  align-items: stretch;
 }
 
 .control-page-tablet-priority .control-side-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 0;
 }
 
 .control-page-tablet-priority .control-side-actions .control-nav-btn {
@@ -56,10 +57,12 @@
 }
 
 /* ================================
-   Robust tablet layout
+   Tablet og større
 
-   Ikke bruk orientation/max-height her. iPad/Safari/PWA/Stage Manager kan
-   rapportere viewport forskjellig. Bredde + min-høyde er mer stabilt.
+   Viktig:
+   Dette bruker wrapper-kolonner i stedet for å la hvert enkelt panel
+   auto-plasseres i grid. Dermed kan Pot/Runde/Spillere ikke hoppe
+   til høyre side, og rundepanelet starter alltid øverst.
 ================================ */
 
 @media (min-width: 600px) and (min-height: 500px) {
@@ -70,7 +73,7 @@
     align-items: stretch;
   }
 
-  .control-page-tablet-priority {
+  .control-page.control-page-tablet-priority {
     width: 100%;
     height: calc(100dvh - 16px);
     min-height: 0;
@@ -83,53 +86,96 @@
     align-items: stretch;
   }
 
-  .control-page-tablet-priority .control-topbar,
-  .control-page-tablet-priority .control-mini-timer {
+  .control-page-tablet-priority .control-topbar {
     display: none;
   }
 
   .control-page-tablet-priority .control-left-column {
     grid-column: 1;
     grid-row: 1;
+
+    min-width: 0;
+    min-height: 0;
     height: 100%;
-    overflow: auto;
-    padding-right: 1px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
   }
 
+  .control-page-tablet-priority .control-right-column {
+    grid-column: 2;
+    grid-row: 1;
+
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  /* Venstre topp: timer/blinds/start/level */
   .control-page-tablet-priority .control-hero {
     flex: 0 0 auto;
+
     padding: 10px;
     gap: 7px;
     min-width: 0;
     min-height: 0;
   }
 
+  /* Venstre midt: Pot / Runde / Spillere */
   .control-page-tablet-priority .control-status-grid {
     flex: 0 0 auto;
+
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 7px;
     min-width: 0;
   }
 
+  /* Venstre bunn: Til timer / fullscreen / room / sync */
   .control-page-tablet-priority .control-side-actions {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+
     display: flex;
     flex-direction: column;
     gap: 7px;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
   }
 
-  .control-page-tablet-priority .control-round-panel {
-    grid-column: 2;
-    grid-row: 1;
+  /* Høyre side: rundepanel/spillerkort */
+  .control-page-tablet-priority .control-right-column > .control-round-panel {
+    flex: 1 1 auto;
+
+    width: 100%;
     height: 100%;
     min-width: 0;
     min-height: 0;
     max-height: none;
-    overflow: auto;
+
+    margin: 0;
     padding: 8px;
+    overflow: auto;
     align-self: stretch;
+
+    /* Overstyrer gamle grid-regler fra controlPage.css */
+    grid-column: auto;
+    grid-row: auto;
   }
+
+  .control-page-tablet-priority .control-mini-timer {
+    display: none;
+  }
+
+  /* ================================
+     Venstre kolonne sizing
+  ================================ */
 
   .control-page-tablet-priority .control-level-pill {
     padding: 5px 9px;
@@ -137,7 +183,7 @@
   }
 
   .control-page-tablet-priority .control-time {
-    font-size: clamp(2.35rem, 8dvh, 4.8rem);
+    font-size: clamp(2.4rem, 8dvh, 4.8rem);
     line-height: 0.9;
   }
 
@@ -214,6 +260,10 @@
     width: 100%;
     justify-content: center;
   }
+
+  /* ================================
+     Høyre rundepanel / spillerkort
+  ================================ */
 
   .control-page-tablet-priority .round-panel-inner-control {
     display: flex;
@@ -342,14 +392,15 @@
   }
 }
 
-/* Smal tablet / mindre viewport */
-@media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
-  .control-page-tablet-priority {
-    grid-template-columns: clamp(200px, 30vw, 260px) minmax(0, 1fr);
-    gap: 6px;
-  }
+/* ================================
+   Smal tablet / liten skjerm
 
-  .control-page-tablet-priority .control-left-column {
+   Fortsatt to kolonner, men venstre kolonne gjøres smalere.
+================================ */
+
+@media (min-width: 600px) and (max-width: 900px) and (min-height: 500px) {
+  .control-page.control-page-tablet-priority {
+    grid-template-columns: clamp(200px, 30vw, 260px) minmax(0, 1fr);
     gap: 6px;
   }
 
@@ -397,7 +448,7 @@
     font-size: 0.74rem;
   }
 
-  .control-page-tablet-priority .control-round-panel {
+  .control-page-tablet-priority .control-right-column > .control-round-panel {
     padding: 6px;
   }
 
@@ -427,24 +478,35 @@
   }
 }
 
-/* Mobil / veldig smal skjerm */
+/* ================================
+   Mobil / veldig smal skjerm
+
+   Én kolonne. Dette skal ikke treffe vanlige tablets.
+================================ */
+
 @media (max-width: 599px), (max-height: 499px) {
   .app-shell:has(.control-page-tablet-priority) {
     height: auto;
     overflow: visible;
   }
 
-  .control-page-tablet-priority {
+  .control-page.control-page-tablet-priority {
     display: flex;
     flex-direction: column;
     height: auto;
+    min-height: 0;
     overflow: visible;
   }
 
-  .control-page-tablet-priority .control-left-column {
+  .control-page-tablet-priority .control-left-column,
+  .control-page-tablet-priority .control-right-column {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    overflow: visible;
   }
 
   .control-page-tablet-priority .control-side-actions {
@@ -453,7 +515,9 @@
     gap: 8px;
   }
 
-  .control-page-tablet-priority .control-round-panel {
+  .control-page-tablet-priority .control-right-column > .control-round-panel {
+    width: 100%;
+    height: auto;
     max-height: none;
     overflow: visible;
   }

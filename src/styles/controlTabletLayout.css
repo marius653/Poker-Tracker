@@ -1,17 +1,16 @@
 /* ================================
-   Control panel tablet landscape layout
+   Control panel tablet layout
 
-   Mål for liggende iPad/tablet:
-   - Venstre kolonne:
-     1. Timer / blinds / start / level
-     2. Pot / Runde / Spillere
-     3. Til timer / fullscreen / room / sync
-   - Høyre kolonne:
-     Rundepanel / spillerkort starter helt øverst
-   - Alle navigasjonsknapper skal alltid være synlige
+   Venstre kolonne:
+   1. Timer / blinds / start / level
+   2. Pot / Runde / Spillere
+   3. Til timer / fullscreen / room / sync
+
+   Høyre kolonne:
+   Rundepanel / spillerkort fra toppen
 ================================ */
 
-/* Standard: ikke skjul side-actions */
+/* Alltid vis side-actions */
 .control-page-tablet-priority .control-side-actions {
   display: flex;
   flex-direction: column;
@@ -40,10 +39,10 @@
 }
 
 /* ================================
-   Liggende tablet / iPad
+   Tablet / iPad landscape layout
 ================================ */
 
-@media (min-width: 700px) and (max-width: 1400px) and (orientation: landscape) {
+@media (min-width: 700px) and (orientation: landscape) {
   .app-shell:has(.control-page-tablet-priority) {
     height: 100dvh;
     overflow: hidden;
@@ -58,27 +57,60 @@
     overflow: hidden;
 
     display: grid;
-    grid-template-columns: minmax(245px, 0.42fr) minmax(0, 1.58fr);
+    grid-template-columns: minmax(250px, 0.42fr) minmax(0, 1.58fr);
     grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "hero round"
+      "status round"
+      "actions round"
+      "empty round";
     gap: 8px;
     align-items: stretch;
   }
 
-  /* Skjul gammel topbar i compact tablet-layout */
   .control-page-tablet-priority .control-topbar {
     display: none;
   }
 
-  /* Venstre topp: timer/blinds/start */
   .control-page-tablet-priority .control-hero {
-    grid-column: 1;
-    grid-row: 1;
-
+    grid-area: hero;
     padding: 10px;
     gap: 7px;
     min-height: 0;
   }
 
+  .control-page-tablet-priority .control-status-grid {
+    grid-area: status;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .control-page-tablet-priority .control-side-actions {
+    grid-area: actions;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .control-page-tablet-priority .control-mini-timer {
+    display: none;
+  }
+
+  .control-page-tablet-priority .control-round-panel {
+    grid-area: round;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    overflow: auto;
+    padding: 8px;
+    align-self: stretch;
+  }
+
+  /* Venstre kolonne sizing */
   .control-page-tablet-priority .control-level-pill {
     padding: 5px 9px;
     font-size: 0.68rem;
@@ -126,16 +158,6 @@
     font-size: 0.9rem;
   }
 
-  /* Venstre midt: Pot / Runde / Spillere */
-  .control-page-tablet-priority .control-status-grid {
-    grid-column: 1;
-    grid-row: 2;
-
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 7px;
-  }
-
   .control-page-tablet-priority .control-status-card {
     padding: 8px 6px;
     min-width: 0;
@@ -150,17 +172,6 @@
   .control-page-tablet-priority .control-status-value {
     font-size: 1.25rem;
     line-height: 1;
-  }
-
-  /* Venstre under status: Til timer / fullscreen / room / sync */
-  .control-page-tablet-priority .control-side-actions {
-    grid-column: 1;
-    grid-row: 3;
-
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    min-height: 0;
   }
 
   .control-page-tablet-priority .control-side-actions .btn {
@@ -189,24 +200,7 @@
     justify-content: center;
   }
 
-  /* Ikke bruk ekstra mini-timer i tablet-layout */
-  .control-page-tablet-priority .control-mini-timer {
-    display: none;
-  }
-
-  /* Høyre side: rundepanel/spillerkort starter øverst */
-  .control-page-tablet-priority .control-round-panel {
-    grid-column: 2;
-    grid-row: 1 / -1;
-
-    height: 100%;
-    max-height: none;
-    min-height: 0;
-    overflow: auto;
-    padding: 8px;
-    align-self: stretch;
-  }
-
+  /* Høyre rundepanel */
   .control-page-tablet-priority .round-panel-inner-control {
     display: flex;
     flex-direction: column;
@@ -335,7 +329,7 @@
 }
 
 /* ================================
-   Ekstra trang liggende tablet
+   Ekstra trang landscape tablet
 ================================ */
 
 @media (min-width: 700px) and (max-width: 1100px) and (orientation: landscape) {
@@ -412,19 +406,16 @@
 
 /* ================================
    Mobil / portrait fallback
-
-   Her lar vi layouten stacke naturlig.
-   Dette påvirker ikke liggende iPad/tablet.
 ================================ */
 
 @media (max-width: 699px), (orientation: portrait) {
-  .control-page-tablet-priority {
-    grid-template-columns: 1fr;
+  .app-shell:has(.control-page-tablet-priority) {
     height: auto;
     overflow: visible;
   }
 
-  .app-shell:has(.control-page-tablet-priority) {
+  .control-page-tablet-priority {
+    grid-template-columns: 1fr;
     height: auto;
     overflow: visible;
   }
@@ -435,6 +426,7 @@
   .control-page-tablet-priority .control-round-panel {
     grid-column: auto;
     grid-row: auto;
+    grid-area: auto;
   }
 
   .control-page-tablet-priority .control-side-actions {

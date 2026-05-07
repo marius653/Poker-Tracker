@@ -8,6 +8,7 @@ import { changeLevel, toggleTimer } from '../state/actions.js';
 import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
 import { formatTime } from '../utils/format.js';
 import '../styles/controlPage.css';
+import '../styles/controlFitMode.css';
 
 export default function ControlPage({
   roomId,

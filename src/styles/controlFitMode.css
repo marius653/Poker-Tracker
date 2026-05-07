@@ -1,0 +1,307 @@
+/* ================================
+   Control panel fit mode
+
+   Mål:
+   - iPad/tablet skal helst slippe full side-scroll
+   - opptil ca. 6 spillere skal få plass bedre
+   - rundepanelet kan få intern scroll hvis innholdet blir for stort
+================================ */
+
+/* Bruk moderne viewport-høyde når kontrollpanelet vises */
+.control-page {
+  min-height: calc(100dvh - 48px);
+}
+
+/* Tablet/iPad: gjør kontrollpanelet mer skjermtilpasset */
+@media (min-width: 700px) and (max-height: 950px) {
+  .app-shell:has(.control-page) {
+    height: 100dvh;
+    overflow: hidden;
+    padding: 10px;
+    align-items: stretch;
+  }
+
+  .control-page {
+    width: 100%;
+    height: calc(100dvh - 20px);
+    min-height: 0;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: minmax(300px, 0.72fr) minmax(520px, 1.28fr);
+    grid-template-rows: auto auto auto 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .control-topbar {
+    grid-column: 1 / -1;
+    gap: 8px;
+  }
+
+  .control-nav-btn {
+    min-height: 42px;
+    min-width: 118px;
+    padding: 9px 12px;
+    border-radius: 12px;
+  }
+
+  .control-hero {
+    padding: 12px;
+    gap: 8px;
+    min-height: 0;
+  }
+
+  .control-level-pill {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+  }
+
+  .control-time {
+    font-size: clamp(3rem, 9vh, 4.8rem);
+    line-height: 0.9;
+  }
+
+  .control-blinds {
+    gap: 10px;
+  }
+
+  .control-blinds span {
+    font-size: 0.68rem;
+  }
+
+  .control-blinds strong {
+    font-size: clamp(1.8rem, 5.6vh, 3.2rem);
+  }
+
+  .control-blind-divider {
+    font-size: clamp(1.6rem, 5vh, 2.8rem);
+  }
+
+  .control-next-level {
+    font-size: 0.82rem;
+  }
+
+  .control-big-btn {
+    min-height: 52px;
+    border-radius: 16px;
+    font-size: 1.35rem;
+  }
+
+  .control-level-actions {
+    gap: 8px;
+  }
+
+  .control-wide-btn {
+    min-height: 46px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+  }
+
+  .control-status-grid {
+    grid-column: 1;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .control-status-card {
+    padding: 9px;
+  }
+
+  .control-status-label {
+    font-size: 0.62rem;
+    margin-bottom: 4px;
+  }
+
+  .control-status-value {
+    font-size: 1.45rem;
+  }
+
+  .control-mini-timer {
+    display: none;
+  }
+
+  .control-round-panel {
+    grid-column: 2;
+    grid-row: 2 / 5;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    overflow: auto;
+    padding: 12px;
+  }
+
+  .control-round-panel .round-panel-head {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .control-round-panel .round-panel-head h2 {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+  }
+
+  .control-round-panel .round-panel-head .round-small-note:first-of-type {
+    display: none;
+  }
+
+  .control-round-panel .round-panel-status {
+    padding: 8px 10px;
+  }
+
+  .control-round-panel .round-stage-title {
+    font-size: 0.9rem;
+  }
+
+  .control-round-panel .street-tabs {
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .control-round-panel .street-tab {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+
+  .control-round-panel .round-chip-grid {
+    grid-template-columns: repeat(2, minmax(245px, 1fr));
+    gap: 8px;
+  }
+
+  .control-round-panel .round-player-card {
+    padding: 9px;
+    border-radius: 13px;
+  }
+
+  .control-round-panel .round-player-head {
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+
+  .control-round-panel .round-player-name {
+    font-size: 0.92rem;
+  }
+
+  .control-round-panel .round-player-meta,
+  .control-round-panel .round-player-stack {
+    font-size: 0.75rem;
+  }
+
+  .control-round-panel .chip-row {
+    gap: 6px;
+  }
+
+  .control-round-panel .chip-control {
+    grid-template-columns: 28px 46px 28px;
+    gap: 4px;
+  }
+
+  .control-round-panel .chip-minus-btn,
+  .control-round-panel .chip-plus-btn {
+    width: 28px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+
+  .control-round-panel .chip-btn {
+    width: 46px;
+    height: 46px;
+    border-width: 2px;
+    font-size: 0.78rem;
+  }
+
+  .control-round-panel .chip-count {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.66rem;
+  }
+
+  .control-round-panel .round-player-summary {
+    margin-top: 7px;
+    font-size: 0.78rem;
+  }
+
+  .control-round-panel .round-player-controls {
+    margin-top: 7px;
+    gap: 6px;
+  }
+
+  .control-round-panel .inline-check {
+    padding: 7px 9px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+  }
+
+  .control-round-panel .round-panel-footer {
+    margin-top: 10px;
+  }
+
+  .control-round-panel .round-panel-footer .btn {
+    padding: 9px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+  }
+
+  .control-round-panel .winners-panel {
+    margin-top: 8px;
+    padding: 10px;
+  }
+
+  .control-round-panel .winner-group {
+    margin-top: 8px;
+    padding: 10px;
+  }
+
+  .control-round-panel .winner-checkboxes {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: 7px;
+  }
+
+  .control-round-panel .winner-checkboxes label {
+    padding: 8px 9px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Litt ekstra stramt for liggende iPad / lav TV-høyde */
+@media (min-width: 900px) and (max-height: 820px) {
+  .control-page {
+    grid-template-columns: minmax(280px, 0.62fr) minmax(560px, 1.38fr);
+    gap: 8px;
+  }
+
+  .control-hero {
+    padding: 10px;
+    gap: 7px;
+  }
+
+  .control-time {
+    font-size: clamp(2.6rem, 8vh, 4.2rem);
+  }
+
+  .control-round-panel .round-chip-grid {
+    grid-template-columns: repeat(2, minmax(230px, 1fr));
+    gap: 7px;
+  }
+
+  .control-round-panel .round-player-card {
+    padding: 8px;
+  }
+
+  .control-round-panel .chip-control {
+    grid-template-columns: 26px 42px 26px;
+    gap: 3px;
+  }
+
+  .control-round-panel .chip-minus-btn,
+  .control-round-panel .chip-plus-btn {
+    width: 26px;
+    height: 34px;
+  }
+
+  .control-round-panel .chip-btn {
+    width: 42px;
+    height: 42px;
+  }
+}

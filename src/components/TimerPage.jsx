@@ -3,6 +3,7 @@ import DisplaySettingsModal from './DisplaySettingsModal.jsx';
 import HandRankingsModal from './HandRankingsModal.jsx';
 import LevelCard from './LevelCard.jsx';
 import PositionBoard from './PositionBoard.jsx';
+import RoomBadge from './RoomBadge.jsx';
 import RoundPanel from './RoundPanel.jsx';
 import StackModal from './StackModal.jsx';
 import TimerRing from './TimerRing.jsx';
@@ -11,9 +12,11 @@ import { changeLevel, saveEditedStacks, toggleTimer } from '../state/actions.js'
 import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
 
 export default function TimerPage({
+  roomId,
   tournamentState,
   setTournamentState,
   onReset,
+  onNewRoom,
   onLevelChangeSound,
   onOpenRoundPage,
 }) {
@@ -72,6 +75,8 @@ export default function TimerPage({
           </button>
         </div>
 
+        <RoomBadge roomId={roomId} />
+
         <div className="button-cluster">
           <button type="button" className="btn btn-gray" onClick={() => setRoundPanelOpen(true)}>
             Rundevindu
@@ -87,6 +92,9 @@ export default function TimerPage({
           </button>
           <button type="button" className="btn btn-gray" onClick={() => setStackModalOpen(true)}>
             Endre stacks
+          </button>
+          <button type="button" className="btn btn-gray" onClick={onNewRoom}>
+            Nytt rom
           </button>
           <button type="button" className="btn btn-danger" onClick={onReset}>
             Avslutt

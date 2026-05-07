@@ -1,7 +1,9 @@
+import RoomBadge from './RoomBadge.jsx';
 import RoundPanelContent from './RoundPanelContent.jsx';
 import '../styles/roundPanel.css';
 
 export default function RoundPage({
+  roomId,
   tournamentState,
   setTournamentState,
   onBackToTimer,
@@ -12,6 +14,8 @@ export default function RoundPage({
         <button type="button" className="btn btn-gray" onClick={onBackToTimer}>
           &larr; Til timer
         </button>
+
+        <RoomBadge roomId={roomId} label="Room" />
 
         <div className="round-page-title">
           Rundeside

@@ -1,4 +1,4 @@
-import { CHIP_TYPES, POSITION_MAP, REMOVAL_PRIORITY, STREETS } from './pokerConstants.js';
+import { CHIP_TYPES, POSITION_MAP, STREETS } from './pokerConstants.js';
 
 export function getCurrentLevel(state) {
   return state.blinds[state.currentLevelIndex] || state.blinds[state.blinds.length - 1];
@@ -38,40 +38,37 @@ export function getSeatIndicesOfActivePlayers(players) {
 }
 
 export function calculateDynamicPositions(activeCount) {
-  const mappedCount = Math.max(5, Math.min(9, activeCount));
-  const base = POSITION_MAP[mappedCount] ? [...POSITION_MAP[mappedCount]] : [];
+  const positionsByActiveCount = {
+    1: ['Dealer'],
+    2: ['Dealer / Small Blind', 'Big Blind'],
+    3: ['Dealer', 'Small Blind', 'Big Blind'],
+    4: ['Dealer', 'Small Blind', 'Big Blind', 'Cutoff'],
+    5: ['Dealer', 'Small Blind', 'Big Blind', 'Under the Gun', 'Cutoff'],
+    6: ['Dealer', 'Small Blind', 'Big Blind', 'Under the Gun', 'Hijack', 'Cutoff'],
+    7: ['Dealer', 'Small Blind', 'Big Blind', 'Under the Gun', 'Middle Position', 'Hijack', 'Cutoff'],
+    8: ['Dealer', 'Small Blind', 'Big Blind', 'Under the Gun', 'Under the Gun +1', 'Lowjack', 'Hijack', 'Cutoff'],
+    9: ['Dealer', 'Small Blind', 'Big Blind', 'Under the Gun', 'Under the Gun +1', 'Middle Position', 'Lowjack', 'Hijack', 'Cutoff'],
+  };
 
-  if (activeCount >= 5 && activeCount <= 9) {
-    const dealerIndex = base.indexOf('Dealer');
+  if (positionsByActiveCount[activeCount]) {
+    return positionsByActiveCount[activeCount];
+  }
 
-    if (dealerIndex > -1) {
-      base.splice(dealerIndex, 1);
-      base.unshift('Dealer');
+  if (activeCount > 9) {
+    const base = [...positionsByActiveCount[9]];
+
+    for (let i = 10; i <= activeCount; i += 1) {
+      base.splice(base.length - 1, 0, `Seat ${i - 3}`);
     }
 
     return base;
   }
 
-  const ninePlayerPositions = [
-    'Dealer',
-    'Small Blind',
-    'Big Blind',
-    'Under the Gun',
-    'Under the Gun +1',
-    'Middle Position',
-    'Lowjack',
-    'Hijack',
-    'Cutoff',
-  ];
-
-  const positionsToRemove = REMOVAL_PRIORITY.slice(0, Math.max(0, 9 - activeCount));
-
-  return ninePlayerPositions.filter((position) => !positionsToRemove.includes(position));
+  return [];
 }
 
 export function applyPositionsForRound(state) {
   const nextState = cloneState(state);
-  const activeIndices = getSeatIndicesOfActivePlayers(nextState.players);
 
   nextState.players = nextState.players.map((player) => {
     const eliminated = player.chips <= 0;
@@ -84,26 +81,26 @@ export function applyPositionsForRound(state) {
     };
   });
 
+  const activeIndices = getSeatIndicesOfActivePlayers(nextState.players);
+
   if (!activeIndices.length) return nextState;
 
   if (!activeIndices.includes(nextState.dealerIndex)) {
     nextState.dealerIndex = activeIndices[activeIndices.length - 1];
   }
 
-  const orderedSeatIndices = [];
+  const orderedSeatIndices = [nextState.dealerIndex];
   const dealerPositionInActive = activeIndices.indexOf(nextState.dealerIndex);
 
-  for (let i = 0; i < activeIndices.length; i += 1) {
-    orderedSeatIndices.push(activeIndices[(dealerPositionInActive + 1 + i) % activeIndices.length]);
+  for (let i = 1; i < activeIndices.length; i += 1) {
+    orderedSeatIndices.push(activeIndices[(dealerPositionInActive + i) % activeIndices.length]);
   }
-
-  orderedSeatIndices.unshift(nextState.dealerIndex);
 
   const labels = calculateDynamicPositions(activeIndices.length);
 
   orderedSeatIndices.forEach((seatIndex, index) => {
     if (nextState.players[seatIndex]) {
-      nextState.players[seatIndex].currentPosition = labels[index] || 'Dealer';
+      nextState.players[seatIndex].currentPosition = labels[index] || '';
     }
   });
 
@@ -160,14 +157,23 @@ export function createHandStateWithBlinds(state) {
   return autoPostBlinds(nextState);
 }
 
+function isSmallBlindPosition(position) {
+  return position === 'Small Blind' || position === 'Dealer / Small Blind';
+}
+
 export function autoPostBlinds(state) {
   const nextState = cloneState(state);
   const level = getCurrentLevel(nextState);
 
   if (!level || !nextState.handState) return nextState;
 
-  const smallBlindPlayer = nextState.players.find((player) => player.currentPosition === 'Small Blind');
-  const bigBlindPlayer = nextState.players.find((player) => player.currentPosition === 'Big Blind');
+  const smallBlindPlayer = nextState.players.find((player) => {
+    return !player.eliminated && player.chips > 0 && isSmallBlindPosition(player.currentPosition);
+  });
+
+  const bigBlindPlayer = nextState.players.find((player) => {
+    return !player.eliminated && player.chips > 0 && player.currentPosition === 'Big Blind';
+  });
 
   if (smallBlindPlayer) {
     postForcedBetInPlace(nextState, smallBlindPlayer.id, level.sb, 'preflop');

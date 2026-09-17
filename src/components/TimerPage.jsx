@@ -7,11 +7,13 @@ import RoomBadge from './RoomBadge.jsx';
 import RoundPanel from './RoundPanel.jsx';
 import StackModal from './StackModal.jsx';
 import SyncStatusBadge from './SyncStatusBadge.jsx';
+import TimerMenu from './TimerMenu.jsx';
 import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
 import { changeLevel, saveEditedStacks, toggleTimer } from '../state/actions.js';
 import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
 import '../styles/timerUiOverrides.css';
+import '../styles/timerMenu.css';
 
 export default function TimerPage({
   roomId,
@@ -86,27 +88,15 @@ export default function TimerPage({
         <div className="button-cluster">
           <RoomBadge roomId={roomId} />
           <SyncStatusBadge status={syncStatus} />
-        </div>
-
-        <div className="button-cluster">
-          <button type="button" className="btn btn-gray" onClick={onOpenControlPage}>
-            Kontrollpanel
-          </button>
-          <button type="button" className="btn btn-gray" onClick={() => setDisplaySettingsOpen(true)}>
-            Skjerm
-          </button>
-          <button type="button" className="btn btn-gray" onClick={() => setStackModalOpen(true)}>
-            Endre stacks
-          </button>
-          <button type="button" className="btn btn-gray" onClick={onOpenJoinRoom}>
-            Bli med
-          </button>
-          <button type="button" className="btn btn-gray" onClick={onNewRoom}>
-            Nytt rom
-          </button>
-          <button type="button" className="btn btn-danger" onClick={onReset}>
-            Avslutt
-          </button>
+          
+          <TimerMenu
+            onOpenControlPage={onOpenControlPage}
+            onOpenDisplaySettings={() => setDisplaySettingsOpen(true)}
+            onOpenStackModal={() => setStackModalOpen(true)}
+            onOpenJoinRoom={onOpenJoinRoom}
+            onNewRoom={onNewRoom}
+            onReset={onReset}
+          />
         </div>
       </div>
 

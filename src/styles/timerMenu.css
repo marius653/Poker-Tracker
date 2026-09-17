@@ -1,0 +1,83 @@
+/* ================================
+   Timer page dropdown menu
+================================ */
+
+.timer-menu {
+  position: relative;
+  z-index: 50;
+}
+
+.timer-menu-trigger {
+  min-width: 108px;
+  gap: 9px;
+}
+
+.timer-menu-trigger.is-open {
+  filter: brightness(1.1);
+}
+
+.timer-menu-icon {
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+.timer-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 230px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1000;
+  background: rgba(27, 31, 38, 0.98);
+  border-radius: 14px;
+}
+
+.timer-menu-item {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.timer-menu-item:hover,
+.timer-menu-item:focus-visible {
+  background: rgba(255, 255, 255, 0.09);
+  outline: none;
+}
+
+.timer-menu-item:active {
+  transform: translateY(1px);
+}
+
+.timer-menu-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.timer-menu-divider {
+  height: 1px;
+  margin: 5px 4px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.timer-menu-item-danger {
+  color: #ff8c90;
+  background: rgba(197, 61, 61, 0.1);
+}
+
+.timer-menu-item-danger:hover,
+.timer-menu-item-danger:focus-visible {
+  background: rgba(197, 61, 61, 0.22);
+}

@@ -530,6 +530,7 @@ td input {
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  margin-bottom: -25px;
 }
 
 .pot-value {

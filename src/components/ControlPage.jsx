@@ -35,6 +35,13 @@ export default function ControlPage({
     onLevelChangeSound?.();
   }
 
+  function handleToggleHandRankings() {
+    setTournamentState((currentState) => ({
+      ...currentState,
+      handRankingsOpen: !currentState.handRankingsOpen,
+    }));
+  }
+
   return (
     <div className="control-page control-page-tablet-priority">
       <div className="control-left-column">
@@ -105,6 +112,16 @@ export default function ControlPage({
         <div className="control-side-actions">
           <button type="button" className="btn btn-gray control-nav-btn" onClick={onBackToTimer}>
             &larr; Timer
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-gray control-nav-btn"
+            onClick={handleToggleHandRankings}
+          >
+            {tournamentState.handRankingsOpen
+              ? 'Skjul hand rankings'
+              : 'Vis hand rankings'}
           </button>
 
           <FullscreenButton />

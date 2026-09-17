@@ -28,7 +28,6 @@ export default function TimerPage({
   onOpenJoinRoom,
 }) {
   const [stackModalOpen, setStackModalOpen] = useState(false);
-  const [handRankingsOpen, setHandRankingsOpen] = useState(false);
   const [displaySettingsOpen, setDisplaySettingsOpen] = useState(false);
   const [roundPanelOpen, setRoundPanelOpen] = useState(false);
 
@@ -45,7 +44,10 @@ export default function TimerPage({
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         setStackModalOpen(false);
-        setHandRankingsOpen(false);
+        setTournamentState((currentState) => ({
+          ...currentState,
+          handRankingsOpen: false,
+        }));
         setDisplaySettingsOpen(false);
         setRoundPanelOpen(false);
       }
@@ -54,7 +56,7 @@ export default function TimerPage({
     document.addEventListener('keydown', handleKeyDown);
 
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [setTournamentState]);
 
   function handleToggleTimer() {
     setTournamentState((currentState) => toggleTimer(currentState));
@@ -70,6 +72,13 @@ export default function TimerPage({
     setStackModalOpen(false);
   }
 
+  function handleSetHandRankingsOpen(isOpen) {
+    setTournamentState((currentState) => ({
+      ...currentState,
+      handRankingsOpen: isOpen,
+    }));
+  }
+
   return (
     <div className="timer-page">
       <div className="top-bar">
@@ -80,7 +89,11 @@ export default function TimerPage({
           <button type="button" className="btn btn-gray" onClick={() => handleChangeLevel(1)}>
             Level &rarr;
           </button>
-          <button type="button" className="btn btn-gray" onClick={() => setHandRankingsOpen(true)}>
+          <button
+            type="button"
+            className="btn btn-gray"
+            onClick={() => handleSetHandRankingsOpen(true)}
+          >
             Hand rankings
           </button>
         </div>
@@ -88,7 +101,7 @@ export default function TimerPage({
         <div className="button-cluster">
           <RoomBadge roomId={roomId} />
           <SyncStatusBadge status={syncStatus} />
-          
+
           <TimerMenu
             onOpenControlPage={onOpenControlPage}
             onOpenDisplaySettings={() => setDisplaySettingsOpen(true)}
@@ -143,8 +156,8 @@ export default function TimerPage({
       />
 
       <HandRankingsModal
-        isOpen={handRankingsOpen}
-        onClose={() => setHandRankingsOpen(false)}
+        isOpen={Boolean(tournamentState.handRankingsOpen)}
+        onClose={() => handleSetHandRankingsOpen(false)}
       />
 
       <DisplaySettingsModal

@@ -11,6 +11,7 @@ export function createInitialTournamentState() {
     roundNumber: 1,
     dealerIndex: -1,
     handState: null,
+    handRankingsOpen: false,
   };
 }
 

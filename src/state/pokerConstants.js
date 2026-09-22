@@ -20,13 +20,88 @@ export const REMOVAL_PRIORITY = [
 
 export const STREETS = ['preflop', 'flop', 'turn', 'river'];
 
-export const CHIP_TYPES = [
-  { key: 'white', label: '10', value: 10, className: 'white' },
-  { key: 'red', label: '20', value: 20, className: 'red' },
-  { key: 'green', label: '50', value: 50, className: 'green' },
-  { key: 'blue', label: '100', value: 100, className: 'blue' },
-  { key: 'black', label: '500', value: 500, className: 'black' },
+export const CHIP_DEFINITIONS = [
+  {
+    key: 'white',
+    name: 'Hvit',
+    defaultValue: 10,
+    className: 'white',
+    baseColor: '#eeeeee',
+    innerColor: '#f3f3f3',
+    edgeColor: '#18155e',
+    textColor: '#303236',
+  },
+  {
+    key: 'red',
+    name: 'Rød',
+    defaultValue: 20,
+    className: 'red',
+    baseColor: '#d91f43',
+    innerColor: '#d91f43',
+    edgeColor: '#f2f2f2',
+    textColor: '#f5f5f5',
+  },
+  {
+    key: 'green',
+    name: 'Grønn',
+    defaultValue: 50,
+    className: 'green',
+    baseColor: '#17875a',
+    innerColor: '#17875a',
+    edgeColor: '#f2f2f2',
+    textColor: '#f5f5f5',
+  },
+  {
+    key: 'blue',
+    name: 'Blå',
+    defaultValue: 100,
+    className: 'blue',
+    baseColor: '#18155e',
+    innerColor: '#18155e',
+    edgeColor: '#f2f2f2',
+    textColor: '#f5f5f5',
+  },
+  {
+    key: 'black',
+    name: 'Svart',
+    defaultValue: 500,
+    className: 'black',
+    baseColor: '#38383f',
+    innerColor: '#38383f',
+    edgeColor: '#f2f2f2',
+    textColor: '#f5f5f5',
+  },
 ];
+
+export const DEFAULT_CHIP_VALUES = Object.fromEntries(
+  CHIP_DEFINITIONS.map((chip) => [chip.key, chip.defaultValue]),
+);
+
+export function normalizeChipValues(values = {}) {
+  return Object.fromEntries(
+    CHIP_DEFINITIONS.map((chip) => {
+      const requestedValue = Number(values?.[chip.key]);
+      const value = Number.isFinite(requestedValue) && requestedValue > 0
+        ? Math.round(requestedValue)
+        : chip.defaultValue;
+
+      return [chip.key, value];
+    }),
+  );
+}
+
+export function getChipTypes(source = {}) {
+  const values = normalizeChipValues(source?.chipValues || source);
+
+  return CHIP_DEFINITIONS.map((chip) => ({
+    ...chip,
+    value: values[chip.key],
+    label: String(values[chip.key]),
+  }));
+}
+
+/* Backwards compatibility for code that still imports CHIP_TYPES directly. */
+export const CHIP_TYPES = getChipTypes(DEFAULT_CHIP_VALUES);
 
 export const HAND_RANKINGS = [
   {

@@ -1,12 +1,25 @@
 import { getCurrentLevel } from '../state/pokerLogic.js';
 import { formatNumber } from '../utils/format.js';
+import '../styles/positionBoardToggle.css';
 
-export default function PositionBoard({ tournamentState }) {
+export default function PositionBoard({ tournamentState, onHide }) {
   const currentLevel = getCurrentLevel(tournamentState);
   const currentBb = currentLevel?.bb || 1;
 
   return (
     <section className="position-board panel">
+      {onHide && (
+        <button
+          type="button"
+          className="position-board-close"
+          onClick={onHide}
+          aria-label="Skjul spillerpanel"
+          title="Skjul spillerpanel"
+        >
+          ×
+        </button>
+      )}
+
       <div className="row position-board-head">
         <div className="round-label">
           Runde: <span>{tournamentState.roundNumber}</span>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ChipVisual from './ChipVisual.jsx';
 import DisplaySettingsModal from './DisplaySettingsModal.jsx';
 import HandRankingsModal from './HandRankingsModal.jsx';
 import LevelCard from './LevelCard.jsx';
@@ -11,6 +12,7 @@ import TimerMenu from './TimerMenu.jsx';
 import TimerRing from './TimerRing.jsx';
 import { useDisplaySettings } from '../hooks/useDisplaySettings.js';
 import { changeLevel, saveEditedStacks, toggleTimer } from '../state/actions.js';
+import { getChipTypes } from '../state/pokerConstants.js';
 import { getCurrentLevel, getNextLevel } from '../state/pokerLogic.js';
 import '../styles/timerUiOverrides.css';
 import '../styles/timerMenu.css';
@@ -30,6 +32,7 @@ export default function TimerPage({
   const [stackModalOpen, setStackModalOpen] = useState(false);
   const [displaySettingsOpen, setDisplaySettingsOpen] = useState(false);
   const [roundPanelOpen, setRoundPanelOpen] = useState(false);
+  const [positionBoardVisible, setPositionBoardVisible] = useState(true);
 
   const {
     displaySettings,
@@ -39,6 +42,7 @@ export default function TimerPage({
 
   const currentLevel = getCurrentLevel(tournamentState);
   const nextLevel = getNextLevel(tournamentState);
+  const chipTypes = getChipTypes(tournamentState);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -109,6 +113,8 @@ export default function TimerPage({
             onOpenJoinRoom={onOpenJoinRoom}
             onNewRoom={onNewRoom}
             onReset={onReset}
+            positionBoardVisible={positionBoardVisible}
+            onShowPositionBoard={() => setPositionBoardVisible(true)}
           />
         </div>
       </div>
@@ -130,16 +136,18 @@ export default function TimerPage({
         <LevelCard title="Neste level" level={nextLevel} />
       </div>
 
-      <img
-        src={`${import.meta.env.BASE_URL}chips1.png`}
-        alt="Chips"
-        className="chips-hero"
-        onError={(event) => {
-          event.currentTarget.style.display = 'none';
-        }}
-      />
+      <div className="chips-hero chips-hero-dynamic" aria-label="Chipverdier">
+        {chipTypes.map((chip) => (
+          <ChipVisual chip={chip} key={chip.key} />
+        ))}
+      </div>
 
-      <PositionBoard tournamentState={tournamentState} />
+      {positionBoardVisible && (
+        <PositionBoard
+          tournamentState={tournamentState}
+          onHide={() => setPositionBoardVisible(false)}
+        />
+      )}
 
       <RoundPanel
         isOpen={roundPanelOpen}

@@ -7,6 +7,8 @@ export default function TimerMenu({
   onOpenJoinRoom,
   onNewRoom,
   onReset,
+  positionBoardVisible = true,
+  onShowPositionBoard,
 }) {
   const [open, setOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -124,6 +126,17 @@ export default function TimerMenu({
           >
             Endre stacks
           </button>
+
+          {!positionBoardVisible && (
+            <button
+              type="button"
+              className="timer-menu-item"
+              role="menuitem"
+              onClick={() => runAction(onShowPositionBoard)}
+            >
+              Vis spillerpanel
+            </button>
+          )}
 
           <button
             type="button"

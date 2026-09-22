@@ -1,4 +1,4 @@
-import { CHIP_TYPES } from '../state/pokerConstants.js';
+import { getChipTypes } from '../state/pokerConstants.js';
 import { chipStateAmount, getRemainingChipsForPlayer } from '../state/pokerLogic.js';
 import { formatNumber } from '../utils/format.js';
 import '../styles/roundTouchControls.css';
@@ -17,7 +17,8 @@ export default function RoundPlayerCard({
     ? handState.streetBets[currentStreet][player.id]
     : null;
 
-  const streetAmount = chips ? chipStateAmount(chips) : 0;
+  const chipTypes = getChipTypes(tournamentState);
+  const streetAmount = chips ? chipStateAmount(chips, chipTypes) : 0;
   const committed = handState.totalCommitted[player.id] || 0;
   const remaining = getRemainingChipsForPlayer(tournamentState, player.id);
 
@@ -49,7 +50,7 @@ export default function RoundPlayerCard({
       {currentStreet && (
         <>
           <div className="chip-row chip-row-touch">
-            {CHIP_TYPES.map((chip) => (
+            {chipTypes.map((chip) => (
               <div className="chip-control" key={chip.key}>
                 <button
                   type="button"

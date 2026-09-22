@@ -134,6 +134,7 @@ export function createHandState(players) {
     totalCommitted: {},
     folded: {},
     allIn: {},
+    allInSnapshots: {},
     winnersByPot: {},
   };
 
@@ -281,6 +282,10 @@ export function removeChipFromPlayer(state, playerId, chipKey) {
 
   if (getRemainingChipsForPlayer(nextState, playerId) > 0) {
     nextState.handState.allIn[playerId] = false;
+
+    if (nextState.handState.allInSnapshots) {
+      delete nextState.handState.allInSnapshots[playerId];
+    }
   }
 
   return recalcPot(nextState);
@@ -296,12 +301,37 @@ export function setFolded(state, playerId, folded) {
 
 export function setAllIn(state, playerId, allIn) {
   const nextState = cloneState(state);
+  const street = getStreetName(nextState);
 
-  nextState.handState.allIn[playerId] = allIn;
+  if (!nextState.handState.allInSnapshots) {
+    nextState.handState.allInSnapshots = {};
+  }
 
   if (allIn) {
+    if (!street) return state;
+
+    if (!nextState.handState.allIn[playerId]) {
+      nextState.handState.allInSnapshots[playerId] = {
+        street,
+        chips: cloneState(nextState.handState.streetBets[street][playerId]),
+      };
+    }
+
+    nextState.handState.allIn[playerId] = true;
     pushRemainingStackToCurrentStreetInPlace(nextState, playerId);
+
+    return recalcPot(nextState);
   }
+
+  const snapshot = nextState.handState.allInSnapshots[playerId];
+
+  if (snapshot?.street && snapshot?.chips) {
+    nextState.handState.streetBets[snapshot.street][playerId] = cloneState(snapshot.chips);
+    syncTotalCommittedForPlayerInPlace(nextState, playerId);
+    delete nextState.handState.allInSnapshots[playerId];
+  }
+
+  nextState.handState.allIn[playerId] = false;
 
   return recalcPot(nextState);
 }

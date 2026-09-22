@@ -18,15 +18,34 @@ export const DEFAULT_BLINDS = [
 ];
 
 export function normalizeBlindLevels(blindLevels) {
-  return blindLevels.map((entry, index) => {
+  let blindLevelNumber = 0;
+  let previousBb = 20;
+
+  return blindLevels.map((entry) => {
+    const duration = Number(entry.duration) || (entry.isBreak ? 10 : 15);
+
+    if (entry.isBreak) {
+      const bb = Number(entry.bb) || previousBb;
+
+      return {
+        level: 'Pause',
+        duration,
+        bb,
+        sb: Math.max(1, Math.floor(bb / 2)),
+        isBreak: true,
+      };
+    }
+
     const bb = Number(entry.bb) || 20;
-    const duration = Number(entry.duration) || 15;
+    previousBb = bb;
+    blindLevelNumber += 1;
 
     return {
-      level: index + 1,
+      level: blindLevelNumber,
       duration,
       bb,
       sb: Math.max(1, Math.floor(bb / 2)),
+      isBreak: false,
     };
   });
 }

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import AutoBlindSetupModal from './AutoBlindSetupModal.jsx';
 import ChipValueSetup from './ChipValueSetup.jsx';
 import DealerRollModal from './DealerRollModal.jsx';
 import SeatRandomizerModal from './SeatRandomizerModal.jsx';
@@ -29,6 +30,7 @@ export default function SetupPage({ onStartTournament }) {
   const [dealerIndex, setDealerIndex] = useState(4);
   const [dealerRollOpen, setDealerRollOpen] = useState(false);
   const [seatRandomizerOpen, setSeatRandomizerOpen] = useState(false);
+  const [autoBlindSetupOpen, setAutoBlindSetupOpen] = useState(false);
 
   const positions = useMemo(
     () => buildSeatPositions(playerCount, dealerIndex),
@@ -172,13 +174,23 @@ export default function SetupPage({ onStartTournament }) {
                 </p>
               </div>
 
-              <button
-                type="button"
-                className="btn btn-gray btn-small"
-                onClick={() => setBlindLevels(DEFAULT_BLINDS)}
-              >
-                Nullstill defaults
-              </button>
+              <div className="row">
+                <button
+                  type="button"
+                  className="btn btn-blue btn-small"
+                  onClick={() => setAutoBlindSetupOpen(true)}
+                >
+                  ⚙️ Automatisk oppsett
+                </button>
+
+                <button
+                  type="button"
+                  className="btn btn-gray btn-small"
+                  onClick={() => setBlindLevels(DEFAULT_BLINDS)}
+                >
+                  Nullstill defaults
+                </button>
+              </div>
             </div>
 
             <div className="blind-table-wrap">
@@ -194,8 +206,13 @@ export default function SetupPage({ onStartTournament }) {
 
                 <tbody>
                   {blindLevels.map((entry, index) => (
-                    <tr key={entry.level}>
-                      <td>{entry.level}</td>
+                    <tr
+                      key={`${entry.isBreak ? 'break' : 'level'}-${index}`}
+                      className={entry.isBreak ? 'blind-break-row' : ''}
+                    >
+                      <td className={entry.isBreak ? 'blind-break-label' : ''}>
+                        {entry.isBreak ? 'Pause' : entry.level}
+                      </td>
                       <td>
                         <input
                           type="number"
@@ -206,16 +223,24 @@ export default function SetupPage({ onStartTournament }) {
                         />
                       </td>
                       <td>
-                        <input type="number" value={Math.floor(entry.bb / 2)} disabled readOnly />
+                        {entry.isBreak ? (
+                          <span className="muted">—</span>
+                        ) : (
+                          <input type="number" value={Math.floor(entry.bb / 2)} disabled readOnly />
+                        )}
                       </td>
                       <td>
-                        <input
-                          type="number"
-                          min="0"
-                          step="10"
-                          value={entry.bb}
-                          onChange={(event) => handleBlindChange(index, 'bb', event.target.value)}
-                        />
+                        {entry.isBreak ? (
+                          <span className="muted">—</span>
+                        ) : (
+                          <input
+                            type="number"
+                            min="0"
+                            step="10"
+                            value={entry.bb}
+                            onChange={(event) => handleBlindChange(index, 'bb', event.target.value)}
+                          />
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -225,6 +250,18 @@ export default function SetupPage({ onStartTournament }) {
           </section>
         </div>
       </form>
+
+      <AutoBlindSetupModal
+        isOpen={autoBlindSetupOpen}
+        playerCount={playerCount}
+        startStack={startStack}
+        chipValues={chipValues}
+        onClose={() => setAutoBlindSetupOpen(false)}
+        onApply={(nextBlindLevels) => {
+          setBlindLevels(nextBlindLevels);
+          setAutoBlindSetupOpen(false);
+        }}
+      />
 
       <SeatRandomizerModal
         isOpen={seatRandomizerOpen}

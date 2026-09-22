@@ -13,6 +13,26 @@ export function getNextLevel(state) {
   return state.blinds[Math.min(state.currentLevelIndex + 1, state.blinds.length - 1)] || getCurrentLevel(state);
 }
 
+export function getCurrentBlindLevel(state) {
+  const currentLevel = getCurrentLevel(state);
+
+  if (!currentLevel?.isBreak) return currentLevel;
+
+  for (let index = state.currentLevelIndex + 1; index < state.blinds.length; index += 1) {
+    if (!state.blinds[index]?.isBreak) {
+      return state.blinds[index];
+    }
+  }
+
+  for (let index = state.currentLevelIndex - 1; index >= 0; index -= 1) {
+    if (!state.blinds[index]?.isBreak) {
+      return state.blinds[index];
+    }
+  }
+
+  return currentLevel;
+}
+
 export function emptyChipState() {
   return {
     white: 0,
@@ -188,7 +208,7 @@ function isSmallBlindPosition(position) {
 
 export function autoPostBlinds(state) {
   const nextState = cloneState(state);
-  const level = getCurrentLevel(nextState);
+  const level = getCurrentBlindLevel(nextState);
 
   if (!level || !nextState.handState) return nextState;
 

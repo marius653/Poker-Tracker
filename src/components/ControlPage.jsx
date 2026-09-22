@@ -47,7 +47,7 @@ export default function ControlPage({
       <div className="control-left-column">
         <section className="control-hero panel">
           <div className="control-level-pill">
-            LEVEL {currentLevel?.level}
+            {currentLevel?.isBreak ? 'PAUSE' : `LEVEL ${currentLevel?.level}`}
           </div>
 
           <div className="control-time">
@@ -57,17 +57,19 @@ export default function ControlPage({
           <div className="control-blinds">
             <div>
               <span>SB</span>
-              <strong>{currentLevel?.sb}</strong>
+              <strong>{currentLevel?.isBreak ? '—' : currentLevel?.sb}</strong>
             </div>
             <div className="control-blind-divider">/</div>
             <div>
               <span>BB</span>
-              <strong>{currentLevel?.bb}</strong>
+              <strong>{currentLevel?.isBreak ? '—' : currentLevel?.bb}</strong>
             </div>
           </div>
 
           <div className="control-next-level">
-            Neste: {nextLevel?.sb}/{nextLevel?.bb} · {nextLevel?.duration} min
+            {nextLevel?.isBreak
+              ? `Neste: Pause · ${nextLevel?.duration} min`
+              : `Neste: ${nextLevel?.sb}/${nextLevel?.bb} · ${nextLevel?.duration} min`}
           </div>
 
           <div className="control-main-actions">

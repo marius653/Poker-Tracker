@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import ChipValueSetup from './ChipValueSetup.jsx';
 import DealerRollModal from './DealerRollModal.jsx';
+import SeatRandomizerModal from './SeatRandomizerModal.jsx';
 import { DEFAULT_BLINDS } from '../state/defaultBlinds.js';
 import { DEFAULT_CHIP_VALUES } from '../state/pokerConstants.js';
 import { calculateDynamicPositions } from '../state/pokerLogic.js';
@@ -27,6 +28,7 @@ export default function SetupPage({ onStartTournament }) {
   const [chipValues, setChipValues] = useState(() => ({ ...DEFAULT_CHIP_VALUES }));
   const [dealerIndex, setDealerIndex] = useState(4);
   const [dealerRollOpen, setDealerRollOpen] = useState(false);
+  const [seatRandomizerOpen, setSeatRandomizerOpen] = useState(false);
 
   const positions = useMemo(
     () => buildSeatPositions(playerCount, dealerIndex),
@@ -39,6 +41,7 @@ export default function SetupPage({ onStartTournament }) {
     setPlayerCount(nextCount);
     setDealerIndex(nextCount - 1);
     setDealerRollOpen(false);
+    setSeatRandomizerOpen(false);
     setPlayerNames((currentNames) =>
       Array.from({ length: nextCount }, (_, index) => {
         return currentNames[index] || `Spiller ${index + 1}`;
@@ -114,6 +117,14 @@ export default function SetupPage({ onStartTournament }) {
               </div>
 
               <div className="dealer-select-row">
+                <button
+                  type="button"
+                  className="btn btn-gray"
+                  onClick={() => setSeatRandomizerOpen(true)}
+                >
+                  🔀 Velg plassering
+                </button>
+
                 <button
                   type="button"
                   className="btn btn-gray"
@@ -214,6 +225,19 @@ export default function SetupPage({ onStartTournament }) {
           </section>
         </div>
       </form>
+
+      <SeatRandomizerModal
+        isOpen={seatRandomizerOpen}
+        playerNames={playerNames}
+        onClose={() => setSeatRandomizerOpen(false)}
+        onApply={(seatOrder) => {
+          const nextDealerIndex = seatOrder.indexOf(dealerIndex);
+
+          setPlayerNames(seatOrder.map((playerIndex) => playerNames[playerIndex]));
+          setDealerIndex(nextDealerIndex >= 0 ? nextDealerIndex : playerCount - 1);
+          setSeatRandomizerOpen(false);
+        }}
+      />
 
       <DealerRollModal
         isOpen={dealerRollOpen}

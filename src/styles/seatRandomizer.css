@@ -1,0 +1,91 @@
+/* ================================
+   Seat randomizer / setup
+================================ */
+
+.seat-randomizer-backdrop {
+  z-index: 120;
+}
+
+.seat-randomizer-modal {
+  width: min(620px, 94vw);
+}
+
+.seat-randomizer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.seat-randomizer-head h2 {
+  margin-bottom: 6px;
+}
+
+.seat-randomizer-list {
+  display: grid;
+  gap: 8px;
+}
+
+.seat-randomizer-row {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.seat-randomizer-seat {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.seat-randomizer-player {
+  font-size: 1.08rem;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.seat-randomizer-note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.seat-randomizer-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .seat-randomizer-modal {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .seat-randomizer-head {
+    align-items: center;
+  }
+
+  .seat-randomizer-row {
+    grid-template-columns: 90px 1fr;
+  }
+
+  .seat-randomizer-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .seat-randomizer-actions .btn {
+    width: 100%;
+  }
+}

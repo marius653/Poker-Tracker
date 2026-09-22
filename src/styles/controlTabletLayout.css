@@ -77,6 +77,7 @@
 }
 
 .control-page-tablet-priority .control-level-pill {
+  align-self: center;
   padding: 4px 8px;
   font-size: 0.6rem;
   letter-spacing: 0.09em;
@@ -108,9 +109,10 @@
 }
 
 .control-page-tablet-priority .control-big-btn {
-  min-height: 58px;
+  min-height: 78px;
   border-radius: 12px;
   font-size: 0.98rem;
+  font-kerning: none;
 }
 
 .control-page-tablet-priority .control-level-actions {
@@ -118,7 +120,7 @@
 }
 
 .control-page-tablet-priority .control-wide-btn {
-  min-height: 31px;
+  min-height: 48px;
   padding: 6px 8px;
   border-radius: 10px;
   font-size: 0.68rem;
@@ -169,10 +171,10 @@
 }
 
 .control-page-tablet-priority .control-side-actions .btn {
-  min-height: 58px;
+  min-height: 78px;
   padding: 5px 7px;
   border-radius: 9px;
-  font-size: 0.64rem;
+  font-size: 0.98rem;
 }
 
 .control-page-tablet-priority .control-side-actions .control-nav-btn {

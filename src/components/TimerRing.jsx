@@ -72,7 +72,9 @@ export default function TimerRing({
 
       <div className="timer-core">
         <div className="timer-content">
-          <div className="timer-level-title">LEVEL {level?.level}</div>
+          <div className="timer-level-title">
+            {level?.isBreak ? 'PAUSE' : `LEVEL ${level?.level}`}
+          </div>
           <div className="timer-value">{formatTime(timeRemainingSec)}</div>
 
           <div className="pot-area">

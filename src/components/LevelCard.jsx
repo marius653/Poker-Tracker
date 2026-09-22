@@ -1,6 +1,18 @@
 export default function LevelCard({ title, level }) {
   if (!level) return null;
 
+  if (level.isBreak) {
+    return (
+      <section className="level-card panel">
+        <div className="eyebrow">{title}</div>
+        <div className="level-break-label">PAUSE</div>
+        <div className="muted duration-text">
+          Varighet: {level.duration} min
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="level-card panel">
       <div className="eyebrow">{title}</div>

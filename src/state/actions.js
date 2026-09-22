@@ -1,5 +1,5 @@
 import { normalizeBlindLevels } from './defaultBlinds.js';
-import { POSITION_MAP } from './pokerConstants.js';
+import { normalizeChipValues, POSITION_MAP } from './pokerConstants.js';
 import {
   applyPositionsForRound,
   createHandStateWithBlinds,
@@ -27,6 +27,7 @@ export function startTournamentFromSetup({
   playerNames,
   blindLevels,
   startStack,
+  chipValues,
   dealerIndex,
 }) {
   const parsedStartStack = Number(startStack) || 2500;
@@ -48,6 +49,7 @@ export function startTournamentFromSetup({
     })),
     blinds: normalizeBlindLevels(blindLevels),
     startStack: parsedStartStack,
+    chipValues: normalizeChipValues(chipValues),
     currentLevelIndex: 0,
     currentPot: 0,
     roundNumber: 1,

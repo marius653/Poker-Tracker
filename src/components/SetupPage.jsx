@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
+import ChipValueSetup from './ChipValueSetup.jsx';
 import DealerRollModal from './DealerRollModal.jsx';
 import { DEFAULT_BLINDS } from '../state/defaultBlinds.js';
+import { DEFAULT_CHIP_VALUES } from '../state/pokerConstants.js';
 import { calculateDynamicPositions } from '../state/pokerLogic.js';
 
 function buildSeatPositions(playerCount, dealerIndex) {
@@ -22,6 +24,7 @@ export default function SetupPage({ onStartTournament }) {
   );
   const [blindLevels, setBlindLevels] = useState(DEFAULT_BLINDS);
   const [startStack, setStartStack] = useState(2500);
+  const [chipValues, setChipValues] = useState(() => ({ ...DEFAULT_CHIP_VALUES }));
   const [dealerIndex, setDealerIndex] = useState(4);
   const [dealerRollOpen, setDealerRollOpen] = useState(false);
 
@@ -71,6 +74,7 @@ export default function SetupPage({ onStartTournament }) {
       playerNames,
       blindLevels,
       startStack,
+      chipValues,
       dealerIndex,
     });
   }
@@ -137,6 +141,11 @@ export default function SetupPage({ onStartTournament }) {
                 />
               </div>
             </div>
+
+            <ChipValueSetup
+              chipValues={chipValues}
+              onChange={setChipValues}
+            />
 
             <button type="submit" className="btn btn-primary btn-start-tournament">
               Start turnering

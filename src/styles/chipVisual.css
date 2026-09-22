@@ -1,0 +1,96 @@
+/* ================================
+   Dynamic poker chips
+================================ */
+
+.chip-visual {
+  display: block;
+  height: auto;
+  flex: 0 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 9px 8px rgba(0, 0, 0, 0.34));
+}
+
+.chips-hero-dynamic {
+  margin: 12px auto 8px;
+  width: min(1120px, 94vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.3vw, 34px);
+  opacity: 0.98;
+}
+
+.chips-hero-dynamic .chip-visual {
+  width: clamp(108px, 9.3vw, 168px);
+}
+
+.chip-value-panel {
+  width: 100%;
+  padding: calc(16px * var(--setup-scale));
+  text-align: left;
+}
+
+.chip-value-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chip-value-heading h3 {
+  margin-bottom: 5px;
+}
+
+.chip-value-heading p {
+  margin-bottom: 0;
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.chip-value-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.chip-value-item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 5px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.chip-value-name {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.chip-value-item input {
+  padding: 7px 5px;
+  text-align: center;
+  font-size: 0.82rem;
+  border-radius: 8px;
+}
+
+@media (max-width: 1100px) {
+  .chips-hero-dynamic .chip-visual {
+    width: clamp(92px, 13vw, 145px);
+  }
+}
+
+@media (max-width: 700px) {
+  .chips-hero-dynamic {
+    display: none;
+  }
+
+  .chip-value-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

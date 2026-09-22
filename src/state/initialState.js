@@ -1,8 +1,11 @@
+import { DEFAULT_CHIP_VALUES } from './pokerConstants.js';
+
 export function createInitialTournamentState() {
   return {
     players: [],
     blinds: [],
     startStack: 2500,
+    chipValues: { ...DEFAULT_CHIP_VALUES },
     currentLevelIndex: 0,
     timeRemainingSec: 0,
     levelEndsAt: null,

@@ -1,4 +1,9 @@
-import { CHIP_TYPES, POSITION_MAP, STREETS } from './pokerConstants.js';
+import {
+  CHIP_TYPES,
+  getChipTypes,
+  POSITION_MAP,
+  STREETS,
+} from './pokerConstants.js';
 
 export function getCurrentLevel(state) {
   return state.blinds[state.currentLevelIndex] || state.blinds[state.blinds.length - 1];
@@ -15,15 +20,34 @@ export function emptyChipState() {
     green: 0,
     blue: 0,
     black: 0,
+    remainder: 0,
   };
 }
 
-export function chipStateAmount(chips) {
+export function chipStateAmount(chips, chipTypes = CHIP_TYPES) {
   if (!chips) return 0;
 
-  return CHIP_TYPES.reduce((sum, chip) => {
+  const chipTotal = chipTypes.reduce((sum, chip) => {
     return sum + ((Number(chips[chip.key]) || 0) * chip.value);
   }, 0);
+
+  return chipTotal + (Number(chips.remainder) || 0);
+}
+
+function addAmountToChipStateInPlace(state, chipState, amount) {
+  let remaining = Math.max(0, Number(amount) || 0);
+  const chipTypes = [...getChipTypes(state)].sort((a, b) => b.value - a.value);
+
+  chipTypes.forEach((chipType) => {
+    while (remaining >= chipType.value) {
+      chipState[chipType.key] += 1;
+      remaining -= chipType.value;
+    }
+  });
+
+  if (remaining > 0) {
+    chipState.remainder = (Number(chipState.remainder) || 0) + remaining;
+  }
 }
 
 export function cloneState(state) {
@@ -192,19 +216,10 @@ export function postForcedBetInPlace(state, playerId, amount, street) {
 
   if (!player || player.eliminated || player.chips <= 0) return;
 
-  let remaining = Math.min(amount, player.chips);
+  const amountToPost = Math.min(Math.max(0, Number(amount) || 0), player.chips);
   const chipState = state.handState.streetBets[street][playerId];
 
-  [...CHIP_TYPES].sort((a, b) => b.value - a.value).forEach((chipType) => {
-    while (remaining >= chipType.value) {
-      chipState[chipType.key] += 1;
-      remaining -= chipType.value;
-    }
-  });
-
-  if (remaining > 0) {
-    chipState.white += Math.ceil(remaining / 10);
-  }
+  addAmountToChipStateInPlace(state, chipState, amountToPost);
 
   syncTotalCommittedForPlayerInPlace(state, playerId);
 
@@ -217,7 +232,10 @@ export function syncTotalCommittedForPlayerInPlace(state, playerId) {
   let total = 0;
 
   STREETS.forEach((street) => {
-    total += chipStateAmount(state.handState.streetBets[street][playerId]);
+    total += chipStateAmount(
+      state.handState.streetBets[street][playerId],
+      getChipTypes(state),
+    );
   });
 
   state.handState.totalCommitted[playerId] = total;
@@ -249,7 +267,7 @@ export function getRemainingChipsForPlayer(state, playerId) {
 export function addChipToPlayer(state, playerId, chipKey) {
   const nextState = cloneState(state);
   const street = getStreetName(nextState);
-  const chip = CHIP_TYPES.find((candidate) => candidate.key === chipKey);
+  const chip = getChipTypes(nextState).find((candidate) => candidate.key === chipKey);
 
   if (!street || !chip) return state;
 
@@ -346,19 +364,8 @@ export function pushRemainingStackToCurrentStreetInPlace(state, playerId) {
   if (remaining <= 0) return;
 
   const chipState = state.handState.streetBets[street][playerId];
-  let rest = remaining;
 
-  [...CHIP_TYPES].sort((a, b) => b.value - a.value).forEach((chipType) => {
-    while (rest >= chipType.value) {
-      chipState[chipType.key] += 1;
-      rest -= chipType.value;
-    }
-  });
-
-  if (rest > 0) {
-    chipState.white += Math.ceil(rest / 10);
-  }
-
+  addAmountToChipStateInPlace(state, chipState, remaining);
   syncTotalCommittedForPlayerInPlace(state, playerId);
 }
 

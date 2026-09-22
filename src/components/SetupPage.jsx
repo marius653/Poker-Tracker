@@ -1,6 +1,19 @@
 import { useMemo, useState } from 'react';
+import DealerRollModal from './DealerRollModal.jsx';
 import { DEFAULT_BLINDS } from '../state/defaultBlinds.js';
-import { POSITION_MAP } from '../state/pokerConstants.js';
+import { calculateDynamicPositions } from '../state/pokerLogic.js';
+
+function buildSeatPositions(playerCount, dealerIndex) {
+  const labels = calculateDynamicPositions(playerCount);
+  const positionsBySeat = Array.from({ length: playerCount }, () => 'Spiller');
+
+  for (let offset = 0; offset < playerCount; offset += 1) {
+    const seatIndex = (dealerIndex + offset) % playerCount;
+    positionsBySeat[seatIndex] = labels[offset] || 'Spiller';
+  }
+
+  return positionsBySeat;
+}
 
 export default function SetupPage({ onStartTournament }) {
   const [playerCount, setPlayerCount] = useState(5);
@@ -9,13 +22,20 @@ export default function SetupPage({ onStartTournament }) {
   );
   const [blindLevels, setBlindLevels] = useState(DEFAULT_BLINDS);
   const [startStack, setStartStack] = useState(2500);
+  const [dealerIndex, setDealerIndex] = useState(4);
+  const [dealerRollOpen, setDealerRollOpen] = useState(false);
 
-  const positions = useMemo(() => POSITION_MAP[playerCount] || [], [playerCount]);
+  const positions = useMemo(
+    () => buildSeatPositions(playerCount, dealerIndex),
+    [playerCount, dealerIndex],
+  );
 
   function handlePlayerCountChange(event) {
     const nextCount = Number(event.target.value);
 
     setPlayerCount(nextCount);
+    setDealerIndex(nextCount - 1);
+    setDealerRollOpen(false);
     setPlayerNames((currentNames) =>
       Array.from({ length: nextCount }, (_, index) => {
         return currentNames[index] || `Spiller ${index + 1}`;
@@ -51,123 +71,150 @@ export default function SetupPage({ onStartTournament }) {
       playerNames,
       blindLevels,
       startStack,
+      dealerIndex,
     });
   }
 
   return (
-    <form className="setup-form" onSubmit={handleSubmit}>
-      <div className="setup-grid">
-        <div className="setup-left-column">
-          <section className="setup-left panel">
-            <h1>Poker Timer Setup</h1>
-            <p className="muted">Velg antall spillere, fyll inn navn, og start turneringen.</p>
+    <>
+      <form className="setup-form" onSubmit={handleSubmit}>
+        <div className="setup-grid">
+          <div className="setup-left-column">
+            <section className="setup-left panel">
+              <h1>Poker Timer Setup</h1>
+              <p className="muted">Velg antall spillere, fyll inn navn, velg dealer og start turneringen.</p>
 
-            <div className="field">
-              <label htmlFor="playerCount">Antall spillere</label>
-              <select id="playerCount" value={playerCount} onChange={handlePlayerCountChange}>
-                {[5, 6, 7, 8, 9].map((count) => (
-                  <option key={count} value={count}>
-                    {count} spillere
-                  </option>
+              <div className="field">
+                <label htmlFor="playerCount">Antall spillere</label>
+                <select id="playerCount" value={playerCount} onChange={handlePlayerCountChange}>
+                  {[5, 6, 7, 8, 9].map((count) => (
+                    <option key={count} value={count}>
+                      {count} spillere
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="player-form-grid">
+                {playerNames.map((name, index) => (
+                  <div className="player-input-row" key={index}>
+                    <div className="position-pill">{positions[index] || 'Spiller'}</div>
+                    <input
+                      type="text"
+                      placeholder={`Spiller ${index + 1}`}
+                      value={name}
+                      onChange={(event) => handlePlayerNameChange(index, event.target.value)}
+                    />
+                  </div>
                 ))}
-              </select>
-            </div>
+              </div>
 
-            <div className="player-form-grid">
-              {playerNames.map((name, index) => (
-                <div className="player-input-row" key={index}>
-                  <div className="position-pill">{positions[index] || 'Spiller'}</div>
-                  <input
-                    type="text"
-                    placeholder={`Spiller ${index + 1}`}
-                    value={name}
-                    onChange={(event) => handlePlayerNameChange(index, event.target.value)}
-                  />
+              <div className="dealer-select-row">
+                <button
+                  type="button"
+                  className="btn btn-gray"
+                  onClick={() => setDealerRollOpen(true)}
+                >
+                  🎲 Velg dealer
+                </button>
+
+                <div className="dealer-selection-status">
+                  Dealer: <strong>{playerNames[dealerIndex] || `Spiller ${dealerIndex + 1}`}</strong>
                 </div>
-              ))}
-            </div>
-          </section>
+              </div>
+            </section>
 
-          <div className="stack-box panel">
-            <div className="field" style={{ marginBottom: 0 }}>
-              <label htmlFor="startStack">Start stack</label>
-              <input
-                id="startStack"
-                type="number"
-                min="0"
-                step="100"
-                value={startStack}
-                onChange={(event) => setStartStack(Number(event.target.value))}
-              />
-            </div>
-          </div>
-
-          <button type="submit" className="btn btn-primary btn-start-tournament">
-            Start turnering
-          </button>
-        </div>
-
-        <section className="setup-right panel">
-          <div className="row setup-heading-row">
-            <div>
-              <h2>Blind setup</h2>
-              <p className="muted">
-                Varighet og big blind kan redigeres. Small blind fylles automatisk som halvparten av big blind.
-              </p>
+            <div className="stack-box panel">
+              <div className="field" style={{ marginBottom: 0 }}>
+                <label htmlFor="startStack">Start stack</label>
+                <input
+                  id="startStack"
+                  type="number"
+                  min="0"
+                  step="100"
+                  value={startStack}
+                  onChange={(event) => setStartStack(Number(event.target.value))}
+                />
+              </div>
             </div>
 
-            <button
-              type="button"
-              className="btn btn-gray btn-small"
-              onClick={() => setBlindLevels(DEFAULT_BLINDS)}
-            >
-              Nullstill defaults
+            <button type="submit" className="btn btn-primary btn-start-tournament">
+              Start turnering
             </button>
           </div>
 
-          <div className="blind-table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Level</th>
-                  <th>Varighet (min)</th>
-                  <th>Small Blind</th>
-                  <th>Big Blind</th>
-                </tr>
-              </thead>
+          <section className="setup-right panel">
+            <div className="row setup-heading-row">
+              <div>
+                <h2>Blind setup</h2>
+                <p className="muted">
+                  Varighet og big blind kan redigeres. Small blind fylles automatisk som halvparten av big blind.
+                </p>
+              </div>
 
-              <tbody>
-                {blindLevels.map((entry, index) => (
-                  <tr key={entry.level}>
-                    <td>{entry.level}</td>
-                    <td>
-                      <input
-                        type="number"
-                        min="1"
-                        step="1"
-                        value={entry.duration}
-                        onChange={(event) => handleBlindChange(index, 'duration', event.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input type="number" value={Math.floor(entry.bb / 2)} disabled readOnly />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        min="0"
-                        step="10"
-                        value={entry.bb}
-                        onChange={(event) => handleBlindChange(index, 'bb', event.target.value)}
-                      />
-                    </td>
+              <button
+                type="button"
+                className="btn btn-gray btn-small"
+                onClick={() => setBlindLevels(DEFAULT_BLINDS)}
+              >
+                Nullstill defaults
+              </button>
+            </div>
+
+            <div className="blind-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Level</th>
+                    <th>Varighet (min)</th>
+                    <th>Small Blind</th>
+                    <th>Big Blind</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
-    </form>
+                </thead>
+
+                <tbody>
+                  {blindLevels.map((entry, index) => (
+                    <tr key={entry.level}>
+                      <td>{entry.level}</td>
+                      <td>
+                        <input
+                          type="number"
+                          min="1"
+                          step="1"
+                          value={entry.duration}
+                          onChange={(event) => handleBlindChange(index, 'duration', event.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input type="number" value={Math.floor(entry.bb / 2)} disabled readOnly />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          min="0"
+                          step="10"
+                          value={entry.bb}
+                          onChange={(event) => handleBlindChange(index, 'bb', event.target.value)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </form>
+
+      <DealerRollModal
+        isOpen={dealerRollOpen}
+        playerNames={playerNames}
+        onClose={() => setDealerRollOpen(false)}
+        onSelectDealer={(nextDealerIndex) => {
+          setDealerIndex(nextDealerIndex);
+          setDealerRollOpen(false);
+        }}
+      />
+    </>
   );
 }

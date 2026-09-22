@@ -22,9 +22,21 @@ export function createPlayer({ name, index, playerCount, startStack }) {
   };
 }
 
-export function startTournamentFromSetup({ currentState, playerNames, blindLevels, startStack }) {
+export function startTournamentFromSetup({
+  currentState,
+  playerNames,
+  blindLevels,
+  startStack,
+  dealerIndex,
+}) {
   const parsedStartStack = Number(startStack) || 2500;
   const playerCount = playerNames.length;
+  const requestedDealerIndex = Number(dealerIndex);
+  const initialDealerIndex = Number.isInteger(requestedDealerIndex)
+    && requestedDealerIndex >= 0
+    && requestedDealerIndex < playerCount
+    ? requestedDealerIndex
+    : playerCount - 1;
 
   let nextState = {
     ...currentState,
@@ -39,7 +51,7 @@ export function startTournamentFromSetup({ currentState, playerNames, blindLevel
     currentLevelIndex: 0,
     currentPot: 0,
     roundNumber: 1,
-    dealerIndex: playerCount - 1,
+    dealerIndex: initialDealerIndex,
     timerRunning: false,
     levelEndsAt: null,
     handState: null,

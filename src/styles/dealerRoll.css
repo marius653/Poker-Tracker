@@ -1,0 +1,189 @@
+/* ================================
+   Dealer roll / setup experiment
+================================ */
+
+.dealer-select-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dealer-selection-status {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.dealer-selection-status strong {
+  color: var(--text);
+}
+
+.dealer-roll-backdrop {
+  z-index: 120;
+}
+
+.dealer-roll-modal {
+  width: min(900px, 96vw);
+}
+
+.dealer-roll-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.dealer-roll-head h2 {
+  margin-bottom: 6px;
+}
+
+.dealer-roll-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 12px;
+}
+
+.dealer-roll-card {
+  position: relative;
+  padding: 16px 12px;
+  border-radius: 16px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dealer-roll-card.is-out {
+  opacity: 0.38;
+}
+
+.dealer-roll-card.is-winner {
+  border-color: rgba(76, 205, 135, 0.75);
+  box-shadow: 0 0 0 2px rgba(76, 205, 135, 0.15);
+  transform: translateY(-2px);
+}
+
+.dealer-roll-name {
+  font-weight: 900;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.dealer-dice {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dealer-die {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+  padding: 6px;
+  border-radius: 12px;
+  background: #f5f5f5;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.dealer-die-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.dealer-die-pip.active {
+  background: #111;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.dealer-die-empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #111;
+}
+
+.dealer-roll-total {
+  margin-top: 10px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.dealer-roll-state {
+  margin-top: 7px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dealer-roll-winner-label {
+  color: #79e6a9;
+}
+
+.dealer-roll-result {
+  min-height: 48px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+}
+
+.dealer-roll-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .dealer-roll-modal {
+    width: 100%;
+    max-height: 92vh;
+    padding: 14px;
+  }
+
+  .dealer-roll-head {
+    align-items: center;
+  }
+
+  .dealer-roll-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dealer-die {
+    width: 48px;
+    height: 48px;
+    padding: 5px;
+  }
+
+  .dealer-die-pip {
+    width: 8px;
+    height: 8px;
+  }
+
+  .dealer-roll-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .dealer-roll-actions .btn {
+    width: 100%;
+  }
+}

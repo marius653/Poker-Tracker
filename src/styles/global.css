@@ -707,9 +707,17 @@ td input {
   font-weight: 800;
 }
 
+.position-card .position-player-name {
+  font-size: calc(2.5rem * var(--position-scale));
+}
+
 .small-note {
   font-size: calc(1.8rem * var(--position-scale));
   color: var(--muted);
+}
+
+.position-card .small-note {
+  font-size: calc(2.5rem * var(--position-scale));
 }
 
 /* ================================

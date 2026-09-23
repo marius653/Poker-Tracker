@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import AutoBlindSetupModal from './AutoBlindSetupModal.jsx';
 import ChipDistributionModal from './ChipDistributionModal.jsx';
 import ChipValueSetup from './ChipValueSetup.jsx';
@@ -6,19 +6,6 @@ import DealerRollModal from './DealerRollModal.jsx';
 import SeatRandomizerModal from './SeatRandomizerModal.jsx';
 import { DEFAULT_BLINDS } from '../state/defaultBlinds.js';
 import { DEFAULT_CHIP_VALUES } from '../state/pokerConstants.js';
-import { calculateDynamicPositions } from '../state/pokerLogic.js';
-
-function buildSeatPositions(playerCount, dealerIndex) {
-  const labels = calculateDynamicPositions(playerCount);
-  const positionsBySeat = Array.from({ length: playerCount }, () => 'Spiller');
-
-  for (let offset = 0; offset < playerCount; offset += 1) {
-    const seatIndex = (dealerIndex + offset) % playerCount;
-    positionsBySeat[seatIndex] = labels[offset] || 'Spiller';
-  }
-
-  return positionsBySeat;
-}
 
 export default function SetupPage({ onStartTournament }) {
   const [playerCount, setPlayerCount] = useState(5);
@@ -33,11 +20,6 @@ export default function SetupPage({ onStartTournament }) {
   const [seatRandomizerOpen, setSeatRandomizerOpen] = useState(false);
   const [autoBlindSetupOpen, setAutoBlindSetupOpen] = useState(false);
   const [chipDistributionOpen, setChipDistributionOpen] = useState(false);
-
-  const positions = useMemo(
-    () => buildSeatPositions(playerCount, dealerIndex),
-    [playerCount, dealerIndex],
-  );
 
   function handlePlayerCountChange(event) {
     const nextCount = Number(event.target.value);
@@ -108,8 +90,11 @@ export default function SetupPage({ onStartTournament }) {
 
               <div className="player-form-grid">
                 {playerNames.map((name, index) => (
-                  <div className="player-input-row" key={index}>
-                    <div className="position-pill">{positions[index] || 'Spiller'}</div>
+                  <div
+                    className="player-input-row"
+                    key={index}
+                    style={{ gridTemplateColumns: '1fr' }}
+                  >
                     <input
                       type="text"
                       placeholder={`Spiller ${index + 1}`}

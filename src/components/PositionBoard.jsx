@@ -70,6 +70,7 @@ export default function PositionBoard({ tournamentState, onHide }) {
           const smallBlind = isSmallBlindPosition(player.currentPosition);
           const bigBlind = player.currentPosition === 'Big Blind';
           const firstToAct = player.id === firstToActPlayerId;
+          const showPositionText = player.eliminated || dealer || smallBlind || bigBlind;
 
           return (
             <div
@@ -111,7 +112,11 @@ export default function PositionBoard({ tournamentState, onHide }) {
                 )}
               </div>
 
-              <div className="pos-name">
+              <div
+                className="pos-name"
+                style={{ visibility: showPositionText ? 'visible' : 'hidden' }}
+                aria-hidden={!showPositionText}
+              >
                 {player.eliminated ? 'Slått ut' : player.currentPosition}
               </div>
               <div className="position-player-name">{player.name}</div>

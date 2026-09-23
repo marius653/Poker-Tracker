@@ -180,6 +180,7 @@ export function createHandState(players) {
     allIn: {},
     allInSnapshots: {},
     winnersByPot: {},
+    firstToActByStreet: {},
   };
 
   players.forEach((player) => {
@@ -196,10 +197,13 @@ export function createHandState(players) {
 }
 
 export function createHandStateWithBlinds(state) {
-  const nextState = cloneState(state);
+  let nextState = cloneState(state);
   nextState.handState = createHandState(nextState.players);
+  nextState = autoPostBlinds(nextState);
 
-  return autoPostBlinds(nextState);
+  snapshotFirstToActForStreetInPlace(nextState, 'preflop');
+
+  return nextState;
 }
 
 function isSmallBlindPosition(position) {
@@ -272,6 +276,105 @@ export function recalcPot(state) {
 
 export function getStreetName(state) {
   return STREETS[state.handState?.streetIndex];
+}
+
+function isPlayerEligibleToAct(state, player) {
+  if (!player || player.eliminated || player.chips <= 0) return false;
+
+  const playerId = player.id;
+
+  return !state.handState?.folded?.[playerId]
+    && !state.handState?.allIn?.[playerId];
+}
+
+function getNextEligiblePlayerAfterIndex(state, startIndex) {
+  const playerCount = state.players.length;
+
+  for (let offset = 1; offset <= playerCount; offset += 1) {
+    const index = (startIndex + offset) % playerCount;
+    const player = state.players[index];
+
+    if (isPlayerEligibleToAct(state, player)) {
+      return player;
+    }
+  }
+
+  return null;
+}
+
+function calculateFirstToActPlayerId(state, street) {
+  if (!state.handState || !street || !state.players.length) return null;
+
+  const eligiblePlayers = state.players.filter((player) => (
+    isPlayerEligibleToAct(state, player)
+  ));
+
+  if (eligiblePlayers.length < 2) return null;
+
+  const livePlayers = state.players.filter((player) => (
+    !player.eliminated && player.chips > 0
+  ));
+
+  if (street === 'preflop') {
+    if (livePlayers.length === 2) {
+      const dealer = state.players[state.dealerIndex];
+
+      if (isPlayerEligibleToAct(state, dealer)) {
+        return dealer.id;
+      }
+
+      return getNextEligiblePlayerAfterIndex(state, state.dealerIndex)?.id || null;
+    }
+
+    const bigBlindIndex = state.players.findIndex((player) => (
+      !player.eliminated
+      && player.chips > 0
+      && player.currentPosition === 'Big Blind'
+    ));
+
+    if (bigBlindIndex >= 0) {
+      return getNextEligiblePlayerAfterIndex(state, bigBlindIndex)?.id || null;
+    }
+  }
+
+  return getNextEligiblePlayerAfterIndex(state, state.dealerIndex)?.id || null;
+}
+
+function snapshotFirstToActForStreetInPlace(state, street) {
+  if (!state.handState || !street) return;
+
+  if (!state.handState.firstToActByStreet) {
+    state.handState.firstToActByStreet = {};
+  }
+
+  if (Object.prototype.hasOwnProperty.call(
+    state.handState.firstToActByStreet,
+    street,
+  )) {
+    return;
+  }
+
+  state.handState.firstToActByStreet[street] = calculateFirstToActPlayerId(
+    state,
+    street,
+  );
+}
+
+export function getFirstToActPlayerId(state) {
+  const street = getStreetName(state);
+
+  if (!street || !state.handState) return null;
+
+  const savedPlayerId = state.handState.firstToActByStreet?.[street];
+
+  if (
+    savedPlayerId
+    && state.players.some((player) => player.id === savedPlayerId)
+  ) {
+    return savedPlayerId;
+  }
+
+  return calculateFirstToActPlayerId(state, street);
 }
 
 export function getRemainingChipsForPlayer(state, playerId) {
@@ -394,6 +497,10 @@ export function nextStreet(state) {
 
   if (nextState.handState.streetIndex < STREETS.length - 1) {
     nextState.handState.streetIndex += 1;
+
+    const street = STREETS[nextState.handState.streetIndex];
+    snapshotFirstToActForStreetInPlace(nextState, street);
+
     return nextState;
   }
 

@@ -1,10 +1,15 @@
-import { getCurrentLevel } from '../state/pokerLogic.js';
+import {
+  getCurrentLevel,
+  getFirstToActPlayerId,
+} from '../state/pokerLogic.js';
 import { formatNumber } from '../utils/format.js';
 import '../styles/positionBoardToggle.css';
+import '../styles/firstToAct.css';
 
 export default function PositionBoard({ tournamentState, onHide }) {
   const currentLevel = getCurrentLevel(tournamentState);
   const currentBb = currentLevel?.bb || 1;
+  const firstToActPlayerId = getFirstToActPlayerId(tournamentState);
 
   return (
     <section className="position-board panel">
@@ -31,6 +36,8 @@ export default function PositionBoard({ tournamentState, onHide }) {
           <div
             className={`position-card ${player.eliminated ? 'eliminated' : ''} ${
               player.currentPosition === 'Dealer' ? 'dealer-highlight' : ''
+            } ${
+              player.id === firstToActPlayerId ? 'first-to-act-highlight' : ''
             }`}
             key={player.id}
           >

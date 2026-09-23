@@ -57,6 +57,13 @@ export default function RoundPanelContent({
     ? STREET_LABELS[currentStreet]
     : 'Velg vinner(e)';
 
+  const displayedPlayers = isControlVariant
+    ? [
+        ...tournamentState.players.filter((player) => !player.eliminated),
+        ...tournamentState.players.filter((player) => player.eliminated),
+      ]
+    : tournamentState.players;
+
   function updateState(updater) {
     setTournamentState((currentState) => updater(currentState));
   }
@@ -179,7 +186,7 @@ export default function RoundPanelContent({
 
       {currentStreet ? (
         <div className="round-chip-grid">
-          {tournamentState.players.map((player) => (
+          {displayedPlayers.map((player) => (
             <RoundPlayerCard
               key={player.id}
               player={player}

@@ -22,6 +22,7 @@ export default function PositionBoard({ tournamentState, onHide }) {
   const currentBb = currentLevel?.bb || 1;
   const firstToActPlayerId = getFirstToActPlayerId(tournamentState);
   const chipTypes = getChipTypes(tournamentState);
+  const isPreflop = tournamentState.handState?.streetIndex === 0;
 
   const whiteChip = chipTypes.find((chip) => chip.key === 'white');
   const redChip = chipTypes.find((chip) => chip.key === 'red');
@@ -70,7 +71,24 @@ export default function PositionBoard({ tournamentState, onHide }) {
           const smallBlind = isSmallBlindPosition(player.currentPosition);
           const bigBlind = player.currentPosition === 'Big Blind';
           const firstToAct = player.id === firstToActPlayerId;
-          const showPositionText = player.eliminated || dealer || smallBlind || bigBlind;
+          const folded = Boolean(tournamentState.handState?.folded?.[player.id]);
+          const showFold = !isPreflop && folded;
+
+          let displayPositionText = '';
+
+          if (player.eliminated) {
+            displayPositionText = 'Slått ut';
+          } else if (showFold) {
+            displayPositionText = 'FOLD';
+          } else if (dealer && smallBlind) {
+            displayPositionText = isPreflop ? 'Dealer / Small Blind' : 'Dealer';
+          } else if (dealer) {
+            displayPositionText = 'Dealer';
+          } else if (isPreflop && smallBlind) {
+            displayPositionText = 'Small Blind';
+          } else if (isPreflop && bigBlind) {
+            displayPositionText = 'Big Blind';
+          }
 
           return (
             <div
@@ -88,7 +106,7 @@ export default function PositionBoard({ tournamentState, onHide }) {
                   </span>
                 )}
 
-                {smallBlind && smallBlindMarkerChip && (
+                {isPreflop && smallBlind && smallBlindMarkerChip && (
                   <ChipVisual
                     chip={smallBlindMarkerChip}
                     size={46}
@@ -96,7 +114,7 @@ export default function PositionBoard({ tournamentState, onHide }) {
                   />
                 )}
 
-                {bigBlind && bigBlindMarkerChip && (
+                {isPreflop && bigBlind && bigBlindMarkerChip && (
                   <ChipVisual
                     chip={bigBlindMarkerChip}
                     size={46}
@@ -113,12 +131,13 @@ export default function PositionBoard({ tournamentState, onHide }) {
               </div>
 
               <div
-                className="pos-name"
-                style={{ visibility: showPositionText ? 'visible' : 'hidden' }}
-                aria-hidden={!showPositionText}
+                className={`pos-name ${showFold ? 'position-fold-label' : ''}`}
+                style={{ visibility: displayPositionText ? 'visible' : 'hidden' }}
+                aria-hidden={!displayPositionText}
               >
-                {player.eliminated ? 'Slått ut' : player.currentPosition}
+                {displayPositionText || player.currentPosition}
               </div>
+
               <div className="position-player-name">{player.name}</div>
               <div className="small-note">Stack: {formatNumber(player.chips)}</div>
               <div className="small-note">

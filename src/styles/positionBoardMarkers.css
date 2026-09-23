@@ -80,6 +80,10 @@
   animation: position-to-act-marker-pulse 1.8s ease-in-out infinite;
 }
 
+.position-card .pos-name.position-fold-label {
+  color: #d96a6d;
+}
+
 @keyframes position-to-act-marker-pulse {
   0%,
   100% {

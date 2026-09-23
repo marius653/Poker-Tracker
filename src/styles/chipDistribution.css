@@ -1,0 +1,159 @@
+/* ================================
+   Chip distribution helper
+================================ */
+
+.chip-distribution-backdrop {
+  z-index: 135;
+}
+
+.chip-distribution-modal {
+  width: min(720px, 96vw);
+}
+
+.chip-distribution-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.chip-distribution-head h2 {
+  margin: 0;
+}
+
+.chip-distribution-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip-distribution-context span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.chip-distribution-table-wrap {
+  overflow-x: auto;
+}
+
+.chip-distribution-table {
+  width: 100%;
+  min-width: 0;
+}
+
+.chip-distribution-table th,
+.chip-distribution-table td {
+  vertical-align: middle;
+}
+
+.chip-distribution-table tbody td:nth-child(n + 2),
+.chip-distribution-table thead th:nth-child(n + 2) {
+  text-align: right;
+}
+
+.chip-distribution-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 105px;
+}
+
+.chip-distribution-chip span {
+  font-weight: 750;
+}
+
+.chip-distribution-count-input {
+  width: 82px;
+  margin-left: auto;
+  padding: 8px 9px;
+  text-align: right;
+}
+
+.chip-distribution-stack-total {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.chip-distribution-stack-total > div {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.chip-distribution-stack-total span,
+.chip-distribution-stack-total strong {
+  display: block;
+}
+
+.chip-distribution-stack-total span {
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.chip-distribution-stack-total strong {
+  font-size: 1.25rem;
+}
+
+.chip-distribution-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.chip-distribution-error {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(197, 61, 61, 0.16);
+  border: 1px solid rgba(197, 61, 61, 0.35);
+  color: #ffd0d0;
+}
+
+.stack-box-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.stack-box-actions .field {
+  flex: 1;
+}
+
+.stack-box-actions .btn {
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .chip-distribution-modal {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .chip-distribution-stack-total {
+    grid-template-columns: 1fr;
+  }
+
+  .chip-distribution-actions {
+    flex-direction: column-reverse;
+  }
+
+  .chip-distribution-actions .btn {
+    width: 100%;
+  }
+
+  .stack-box-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

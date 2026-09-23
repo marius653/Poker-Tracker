@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import AutoBlindSetupModal from './AutoBlindSetupModal.jsx';
+import ChipDistributionModal from './ChipDistributionModal.jsx';
 import ChipValueSetup from './ChipValueSetup.jsx';
 import DealerRollModal from './DealerRollModal.jsx';
 import SeatRandomizerModal from './SeatRandomizerModal.jsx';
@@ -31,6 +32,7 @@ export default function SetupPage({ onStartTournament }) {
   const [dealerRollOpen, setDealerRollOpen] = useState(false);
   const [seatRandomizerOpen, setSeatRandomizerOpen] = useState(false);
   const [autoBlindSetupOpen, setAutoBlindSetupOpen] = useState(false);
+  const [chipDistributionOpen, setChipDistributionOpen] = useState(false);
 
   const positions = useMemo(
     () => buildSeatPositions(playerCount, dealerIndex),
@@ -91,7 +93,7 @@ export default function SetupPage({ onStartTournament }) {
           <div className="setup-left-column">
             <section className="setup-left panel">
               <h1>Poker Timer Setup</h1>
-              <p className="muted">Velg antall spillere, fyll inn navn, velg dealer og start turneringen.</p>
+              <p className="muted">Velg antall spillere, fyll inn navn, rull terning for å velge dealer og start turneringen.</p>
 
               <div className="field">
                 <label htmlFor="playerCount">Antall spillere</label>
@@ -121,18 +123,18 @@ export default function SetupPage({ onStartTournament }) {
               <div className="dealer-select-row">
                 <button
                   type="button"
-                  className="btn btn-gray"
+                  className="btn btn-gray btn-small"
                   onClick={() => setSeatRandomizerOpen(true)}
                 >
-                  🔀 Velg plassering
+                  Velg plassering
                 </button>
 
                 <button
                   type="button"
-                  className="btn btn-gray"
+                  className="btn btn-gray btn-small"
                   onClick={() => setDealerRollOpen(true)}
                 >
-                  🎲 Velg dealer
+                  Velg dealer
                 </button>
 
                 <div className="dealer-selection-status">
@@ -142,16 +144,26 @@ export default function SetupPage({ onStartTournament }) {
             </section>
 
             <div className="stack-box panel">
-              <div className="field" style={{ marginBottom: 0 }}>
-                <label htmlFor="startStack">Start stack</label>
-                <input
-                  id="startStack"
-                  type="number"
-                  min="0"
-                  step="100"
-                  value={startStack}
-                  onChange={(event) => setStartStack(Number(event.target.value))}
-                />
+              <div className="stack-box-actions">
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label htmlFor="startStack">Start stack</label>
+                  <input
+                    id="startStack"
+                    type="number"
+                    min="0"
+                    step="100"
+                    value={startStack}
+                    onChange={(event) => setStartStack(Number(event.target.value))}
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  className="btn btn-gray btn-small"
+                  onClick={() => setChipDistributionOpen(true)}
+                >
+                  Sjetongfordeling
+                </button>
               </div>
             </div>
 
@@ -177,10 +189,10 @@ export default function SetupPage({ onStartTournament }) {
               <div className="row">
                 <button
                   type="button"
-                  className="btn btn-blue btn-small"
+                  className="btn btn-gray btn-small"
                   onClick={() => setAutoBlindSetupOpen(true)}
                 >
-                  ⚙️ Automatisk oppsett
+                  Automatisk oppsett
                 </button>
 
                 <button
@@ -250,6 +262,19 @@ export default function SetupPage({ onStartTournament }) {
           </section>
         </div>
       </form>
+
+      <ChipDistributionModal
+        isOpen={chipDistributionOpen}
+        playerCount={playerCount}
+        startStack={startStack}
+        chipValues={chipValues}
+        blindLevels={blindLevels}
+        onClose={() => setChipDistributionOpen(false)}
+        onSaveStack={(nextStartStack) => {
+          setStartStack(nextStartStack);
+          setChipDistributionOpen(false);
+        }}
+      />
 
       <AutoBlindSetupModal
         isOpen={autoBlindSetupOpen}

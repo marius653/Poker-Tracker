@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import CardImageModal from './CardImageModal.jsx';
 import ChipVisual from './ChipVisual.jsx';
 import DisplaySettingsModal from './DisplaySettingsModal.jsx';
 import HandRankingsModal from './HandRankingsModal.jsx';
@@ -51,6 +52,7 @@ export default function TimerPage({
         setTournamentState((currentState) => ({
           ...currentState,
           handRankingsOpen: false,
+          cardImageOpen: false,
         }));
         setDisplaySettingsOpen(false);
         setRoundPanelOpen(false);
@@ -80,6 +82,15 @@ export default function TimerPage({
     setTournamentState((currentState) => ({
       ...currentState,
       handRankingsOpen: isOpen,
+      cardImageOpen: isOpen ? false : currentState.cardImageOpen,
+    }));
+  }
+
+  function handleSetCardImageOpen(isOpen) {
+    setTournamentState((currentState) => ({
+      ...currentState,
+      cardImageOpen: isOpen,
+      handRankingsOpen: isOpen ? false : currentState.handRankingsOpen,
     }));
   }
 
@@ -166,6 +177,11 @@ export default function TimerPage({
       <HandRankingsModal
         isOpen={Boolean(tournamentState.handRankingsOpen)}
         onClose={() => handleSetHandRankingsOpen(false)}
+      />
+
+      <CardImageModal
+        isOpen={Boolean(tournamentState.cardImageOpen)}
+        onClose={() => handleSetCardImageOpen(false)}
       />
 
       <DisplaySettingsModal

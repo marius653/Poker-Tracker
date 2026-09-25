@@ -33,9 +33,9 @@ export function useLevelSound(src) {
     const audio = getAudio();
     audio.currentTime = 0;
 
-    audio.play().catch((err) => {
-      console.warn('Kunne ikke spille av level-lyd.', err);
-    });
+    //audio.play().catch((err) => {
+      //console.warn('Kunne ikke spille av level-lyd.', err);
+    //});
   }, [src]);
 
   return {

@@ -11,6 +11,7 @@ import { formatTime } from '../utils/format.js';
 import '../styles/controlPage.css';
 import '../styles/controlFitMode.css';
 import '../styles/controlTabletLayout.css';
+import '../styles/cardImageModal.css';
 
 export default function ControlPage({
   roomId,
@@ -36,10 +37,27 @@ export default function ControlPage({
   }
 
   function handleToggleHandRankings() {
-    setTournamentState((currentState) => ({
-      ...currentState,
-      handRankingsOpen: !currentState.handRankingsOpen,
-    }));
+    setTournamentState((currentState) => {
+      const nextOpen = !currentState.handRankingsOpen;
+
+      return {
+        ...currentState,
+        handRankingsOpen: nextOpen,
+        cardImageOpen: nextOpen ? false : currentState.cardImageOpen,
+      };
+    });
+  }
+
+  function handleToggleCardImage() {
+    setTournamentState((currentState) => {
+      const nextOpen = !currentState.cardImageOpen;
+
+      return {
+        ...currentState,
+        cardImageOpen: nextOpen,
+        handRankingsOpen: nextOpen ? false : currentState.handRankingsOpen,
+      };
+    });
   }
 
   return (
@@ -131,6 +149,14 @@ export default function ControlPage({
           <div className="control-side-room">
             <RoomBadge roomId={roomId} />
             <SyncStatusBadge status={syncStatus} />
+
+            <button
+              type="button"
+              className="btn btn-gray control-card-display-btn"
+              onClick={handleToggleCardImage}
+            >
+              {tournamentState.cardImageOpen ? 'Skjul kort' : 'Vis kort'}
+            </button>
           </div>
         </div>
       </div>

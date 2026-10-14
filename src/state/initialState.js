@@ -15,6 +15,7 @@ export function createInitialTournamentState() {
     dealerIndex: -1,
     handState: null,
     handRankingsOpen: false,
+    cardImageOpen: false,
   };
 }
 

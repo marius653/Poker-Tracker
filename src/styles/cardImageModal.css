@@ -1,0 +1,49 @@
+/* ================================
+   Card image modal
+   1.25 x standard modal size
+================================ */
+
+.card-image-modal {
+  width: min(1650px, 96vw);
+  max-height: 96vh;
+  padding: 25px;
+  overflow: auto;
+}
+
+.card-image-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.card-image-modal-head h2 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card-image-modal-image {
+  display: block;
+  width: 100%;
+  max-height: calc(94vh - 110px);
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+/* Compact button directly under room/sync status on iPad control page. */
+.control-page-tablet-priority .control-side-room .control-card-display-btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 5px 7px;
+  border-radius: 9px;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 700px) {
+  .card-image-modal {
+    width: 98vw;
+    padding: 16px;
+  }
+}

@@ -1,7 +1,6 @@
 import {
   CHIP_TYPES,
   getChipTypes,
-  POSITION_MAP,
   STREETS,
 } from './pokerConstants.js';
 
@@ -111,10 +110,153 @@ export function calculateDynamicPositions(activeCount) {
   return [];
 }
 
-export function applyPositionsForRound(state) {
-  const nextState = cloneState(state);
+function isValidSeatIndex(index, playerCount) {
+  return Number.isInteger(index) && index >= 0 && index < playerCount;
+}
 
-  nextState.players = nextState.players.map((player) => {
+function isSmallBlindPosition(position) {
+  return position === 'Small Blind' || position === 'Dealer / Small Blind';
+}
+
+function isDealerPosition(position) {
+  return position === 'Dealer' || position === 'Dealer / Small Blind';
+}
+
+function getNextActiveSeatAfter(players, startIndex) {
+  const playerCount = players.length;
+
+  if (!playerCount) return -1;
+
+  for (let offset = 1; offset <= playerCount; offset += 1) {
+    const index = (startIndex + offset + playerCount) % playerCount;
+    const player = players[index];
+
+    if (player && !player.eliminated && player.chips > 0) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function getActiveSeatsAfter(players, startIndex) {
+  const ordered = [];
+  const playerCount = players.length;
+
+  if (!playerCount) return ordered;
+
+  for (let offset = 1; offset <= playerCount; offset += 1) {
+    const index = (startIndex + offset + playerCount) % playerCount;
+    const player = players[index];
+
+    if (player && !player.eliminated && player.chips > 0) {
+      ordered.push(index);
+    }
+  }
+
+  return ordered;
+}
+
+function ensureBlindPositionIndicesInPlace(state) {
+  const playerCount = state.players.length;
+  const activeIndices = getSeatIndicesOfActivePlayers(state.players);
+
+  if (!activeIndices.length) {
+    state.dealerIndex = -1;
+    state.smallBlindIndex = -1;
+    state.bigBlindIndex = -1;
+    return;
+  }
+
+  const hadSmallBlindIndex = Object.prototype.hasOwnProperty.call(
+    state,
+    'smallBlindIndex',
+  );
+  const hadBigBlindIndex = Object.prototype.hasOwnProperty.call(
+    state,
+    'bigBlindIndex',
+  );
+
+  const dealerFromPosition = state.players.findIndex((player) => (
+    isDealerPosition(player.currentPosition)
+  ));
+  const smallBlindFromPosition = state.players.findIndex((player) => (
+    isSmallBlindPosition(player.currentPosition)
+  ));
+  const bigBlindFromPosition = state.players.findIndex((player) => (
+    player.currentPosition === 'Big Blind'
+  ));
+
+  if (!isValidSeatIndex(state.dealerIndex, playerCount)) {
+    state.dealerIndex = dealerFromPosition >= 0
+      ? dealerFromPosition
+      : activeIndices[activeIndices.length - 1];
+  }
+
+  // Migration for tournaments saved before explicit blind-seat indices existed.
+  // New tournaments already contain the fields (initially -1), so stale
+  // currentPosition labels from setup are intentionally ignored there.
+  if (
+    !hadSmallBlindIndex
+    && smallBlindFromPosition >= 0
+  ) {
+    state.smallBlindIndex = smallBlindFromPosition;
+  }
+
+  if (
+    !hadBigBlindIndex
+    && bigBlindFromPosition >= 0
+  ) {
+    state.bigBlindIndex = bigBlindFromPosition;
+  }
+
+  if (activeIndices.length === 1) {
+    state.dealerIndex = activeIndices[0];
+    state.smallBlindIndex = -1;
+    state.bigBlindIndex = -1;
+    return;
+  }
+
+  const smallBlindIsValid = isValidSeatIndex(state.smallBlindIndex, playerCount);
+  const bigBlindIsValid = isValidSeatIndex(state.bigBlindIndex, playerCount);
+
+  // Existing valid indices describe the current hand. Keep them even if a
+  // player has just busted; advancePositionsForNextHand() needs those old
+  // seats to calculate the next BB correctly.
+  if (smallBlindIsValid && bigBlindIsValid) {
+    return;
+  }
+
+  if (activeIndices.length === 2) {
+    if (!activeIndices.includes(state.dealerIndex)) {
+      state.dealerIndex = activeIndices[0];
+    }
+
+    state.smallBlindIndex = state.dealerIndex;
+    state.bigBlindIndex = getNextActiveSeatAfter(
+      state.players,
+      state.dealerIndex,
+    );
+    return;
+  }
+
+  if (!smallBlindIsValid) {
+    state.smallBlindIndex = getNextActiveSeatAfter(
+      state.players,
+      state.dealerIndex,
+    );
+  }
+
+  if (!bigBlindIsValid) {
+    state.bigBlindIndex = getNextActiveSeatAfter(
+      state.players,
+      state.smallBlindIndex,
+    );
+  }
+}
+
+function assignPositionLabelsInPlace(state) {
+  state.players = state.players.map((player) => {
     const eliminated = player.chips <= 0;
 
     return {
@@ -125,45 +267,119 @@ export function applyPositionsForRound(state) {
     };
   });
 
-  const activeIndices = getSeatIndicesOfActivePlayers(nextState.players);
+  const activeIndices = getSeatIndicesOfActivePlayers(state.players);
 
-  if (!activeIndices.length) return nextState;
+  if (!activeIndices.length) return;
 
-  if (!activeIndices.includes(nextState.dealerIndex)) {
-    nextState.dealerIndex = activeIndices[activeIndices.length - 1];
+  if (activeIndices.length === 1) {
+    const onlyIndex = activeIndices[0];
+    state.players[onlyIndex].currentPosition = 'Dealer';
+    return;
   }
 
-  const orderedSeatIndices = [nextState.dealerIndex];
-  const dealerPositionInActive = activeIndices.indexOf(nextState.dealerIndex);
+  const dealerPlayer = state.players[state.dealerIndex];
+  const smallBlindPlayer = state.players[state.smallBlindIndex];
+  const bigBlindPlayer = state.players[state.bigBlindIndex];
 
-  for (let i = 1; i < activeIndices.length; i += 1) {
-    orderedSeatIndices.push(activeIndices[(dealerPositionInActive + i) % activeIndices.length]);
+  if (dealerPlayer && !dealerPlayer.eliminated && dealerPlayer.chips > 0) {
+    dealerPlayer.currentPosition = state.dealerIndex === state.smallBlindIndex
+      ? 'Dealer / Small Blind'
+      : 'Dealer';
   }
 
-  const labels = calculateDynamicPositions(activeIndices.length);
+  if (
+    smallBlindPlayer
+    && !smallBlindPlayer.eliminated
+    && smallBlindPlayer.chips > 0
+    && state.smallBlindIndex !== state.dealerIndex
+  ) {
+    smallBlindPlayer.currentPosition = 'Small Blind';
+  }
 
-  orderedSeatIndices.forEach((seatIndex, index) => {
-    if (nextState.players[seatIndex]) {
-      nextState.players[seatIndex].currentPosition = labels[index] || '';
-    }
+  if (bigBlindPlayer && !bigBlindPlayer.eliminated && bigBlindPlayer.chips > 0) {
+    bigBlindPlayer.currentPosition = 'Big Blind';
+  }
+
+  const roleIndices = new Set([
+    state.dealerIndex,
+    state.smallBlindIndex,
+    state.bigBlindIndex,
+  ]);
+
+  const otherIndices = getActiveSeatsAfter(state.players, state.bigBlindIndex)
+    .filter((index) => !roleIndices.has(index));
+
+  const otherLabels = calculateDynamicPositions(otherIndices.length + 3).slice(3);
+
+  otherIndices.forEach((seatIndex, index) => {
+    state.players[seatIndex].currentPosition = otherLabels[index] || `Seat ${index + 1}`;
   });
+}
+
+export function applyPositionsForRound(state) {
+  const nextState = cloneState(state);
+
+  nextState.players = nextState.players.map((player) => {
+    const eliminated = player.chips <= 0;
+
+    return {
+      ...player,
+      eliminated,
+      active: !eliminated,
+    };
+  });
+
+  ensureBlindPositionIndicesInPlace(nextState);
+  assignPositionLabelsInPlace(nextState);
 
   return nextState;
 }
 
-export function moveDealerToNextActive(state) {
+export function advancePositionsForNextHand(state) {
   const nextState = cloneState(state);
+
+  ensureBlindPositionIndicesInPlace(nextState);
+
   const activeIndices = getSeatIndicesOfActivePlayers(nextState.players);
 
-  if (!activeIndices.length) return nextState;
+  if (!activeIndices.length) {
+    return applyPositionsForRound(nextState);
+  }
 
-  const currentPosition = activeIndices.indexOf(nextState.dealerIndex);
+  if (activeIndices.length === 1) {
+    nextState.dealerIndex = activeIndices[0];
+    nextState.smallBlindIndex = -1;
+    nextState.bigBlindIndex = -1;
+    return applyPositionsForRound(nextState);
+  }
 
-  nextState.dealerIndex = currentPosition === -1
-    ? activeIndices[0]
-    : activeIndices[(currentPosition + 1) % activeIndices.length];
+  const previousBigBlindIndex = nextState.bigBlindIndex;
+  const previousSmallBlindIndex = nextState.smallBlindIndex;
+  const nextBigBlindIndex = getNextActiveSeatAfter(
+    nextState.players,
+    previousBigBlindIndex,
+  );
+
+  if (activeIndices.length === 2) {
+    const nextDealerIndex = activeIndices.find((index) => index !== nextBigBlindIndex);
+
+    nextState.dealerIndex = nextDealerIndex;
+    nextState.smallBlindIndex = nextDealerIndex;
+    nextState.bigBlindIndex = nextBigBlindIndex;
+
+    return applyPositionsForRound(nextState);
+  }
+
+  nextState.dealerIndex = previousSmallBlindIndex;
+  nextState.smallBlindIndex = previousBigBlindIndex;
+  nextState.bigBlindIndex = nextBigBlindIndex;
 
   return applyPositionsForRound(nextState);
+}
+
+// Backwards-compatible export for any existing imports.
+export function moveDealerToNextActive(state) {
+  return advancePositionsForNextHand(state);
 }
 
 export function createHandState(players) {
@@ -197,7 +413,7 @@ export function createHandState(players) {
 }
 
 export function createHandStateWithBlinds(state) {
-  let nextState = cloneState(state);
+  let nextState = applyPositionsForRound(state);
   nextState.handState = createHandState(nextState.players);
   nextState = autoPostBlinds(nextState);
 
@@ -206,29 +422,33 @@ export function createHandStateWithBlinds(state) {
   return nextState;
 }
 
-function isSmallBlindPosition(position) {
-  return position === 'Small Blind' || position === 'Dealer / Small Blind';
-}
-
 export function autoPostBlinds(state) {
   const nextState = cloneState(state);
   const level = getCurrentBlindLevel(nextState);
 
   if (!level || !nextState.handState) return nextState;
 
-  const smallBlindPlayer = nextState.players.find((player) => {
-    return !player.eliminated && player.chips > 0 && isSmallBlindPosition(player.currentPosition);
-  });
+  ensureBlindPositionIndicesInPlace(nextState);
 
-  const bigBlindPlayer = nextState.players.find((player) => {
-    return !player.eliminated && player.chips > 0 && player.currentPosition === 'Big Blind';
-  });
+  const smallBlindPlayer = isValidSeatIndex(
+    nextState.smallBlindIndex,
+    nextState.players.length,
+  )
+    ? nextState.players[nextState.smallBlindIndex]
+    : null;
 
-  if (smallBlindPlayer) {
+  const bigBlindPlayer = isValidSeatIndex(
+    nextState.bigBlindIndex,
+    nextState.players.length,
+  )
+    ? nextState.players[nextState.bigBlindIndex]
+    : null;
+
+  if (smallBlindPlayer && !smallBlindPlayer.eliminated && smallBlindPlayer.chips > 0) {
     postForcedBetInPlace(nextState, smallBlindPlayer.id, level.sb, 'preflop');
   }
 
-  if (bigBlindPlayer) {
+  if (bigBlindPlayer && !bigBlindPlayer.eliminated && bigBlindPlayer.chips > 0) {
     postForcedBetInPlace(nextState, bigBlindPlayer.id, level.bb, 'preflop');
   }
 
@@ -291,7 +511,7 @@ function getNextEligiblePlayerAfterIndex(state, startIndex) {
   const playerCount = state.players.length;
 
   for (let offset = 1; offset <= playerCount; offset += 1) {
-    const index = (startIndex + offset) % playerCount;
+    const index = (startIndex + offset + playerCount) % playerCount;
     const player = state.players[index];
 
     if (isPlayerEligibleToAct(state, player)) {
@@ -326,11 +546,13 @@ function calculateFirstToActPlayerId(state, street) {
       return getNextEligiblePlayerAfterIndex(state, state.dealerIndex)?.id || null;
     }
 
-    const bigBlindIndex = state.players.findIndex((player) => (
-      !player.eliminated
-      && player.chips > 0
-      && player.currentPosition === 'Big Blind'
-    ));
+    const bigBlindIndex = isValidSeatIndex(state.bigBlindIndex, state.players.length)
+      ? state.bigBlindIndex
+      : state.players.findIndex((player) => (
+          !player.eliminated
+          && player.chips > 0
+          && player.currentPosition === 'Big Blind'
+        ));
 
     if (bigBlindIndex >= 0) {
       return getNextEligiblePlayerAfterIndex(state, bigBlindIndex)?.id || null;
@@ -616,7 +838,7 @@ export function finalizeRound(state) {
 
   nextState.currentPot = 0;
   nextState.roundNumber += 1;
-  nextState = moveDealerToNextActive(nextState);
+  nextState = advancePositionsForNextHand(nextState);
   nextState = createHandStateWithBlinds(nextState);
 
   return {

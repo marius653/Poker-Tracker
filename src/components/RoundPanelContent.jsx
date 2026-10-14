@@ -3,6 +3,7 @@ import ShowdownPanel from './ShowdownPanel.jsx';
 import { STREETS } from '../state/pokerConstants.js';
 import {
   addChipToPlayer,
+  advancePositionsForNextHand,
   createHandStateWithBlinds,
   finalizeRound,
   nextStreet,
@@ -103,6 +104,24 @@ export default function RoundPanelContent({
       }
 
       return result.state;
+    });
+  }
+
+  function handleNextRound() {
+    setTournamentState((currentState) => {
+      let nextState = {
+        ...currentState,
+        currentPot: 0,
+        roundNumber: currentState.roundNumber + 1,
+      };
+
+      // Skip settlement of the current hand. Bets/blinds in handState are
+      // discarded, so player.chips stays unchanged. Then rotate positions
+      // normally and create a fresh preflop hand with new blinds.
+      nextState = advancePositionsForNextHand(nextState);
+      nextState = createHandStateWithBlinds(nextState);
+
+      return nextState;
     });
   }
 
@@ -235,12 +254,11 @@ export default function RoundPanelContent({
           {isControlVariant && (
             <button
               type="button"
-              className="btn btn-gray round-reset-spacer"
-              disabled
-              aria-hidden="true"
-              tabIndex={-1}
+              className="btn btn-blue"
+              onClick={handleNextRound}
+              title="Forkast bets i denne hånden og gå direkte til neste runde"
             >
-              &nbsp;
+              Neste runde
             </button>
           )}
 

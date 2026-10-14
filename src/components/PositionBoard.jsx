@@ -23,6 +23,10 @@ export default function PositionBoard({ tournamentState, onHide }) {
   const firstToActPlayerId = getFirstToActPlayerId(tournamentState);
   const chipTypes = getChipTypes(tournamentState);
   const isPreflop = tournamentState.handState?.streetIndex === 0;
+  const hasSmallBlindIndex = Number.isInteger(tournamentState.smallBlindIndex)
+    && tournamentState.smallBlindIndex >= 0;
+  const hasBigBlindIndex = Number.isInteger(tournamentState.bigBlindIndex)
+    && tournamentState.bigBlindIndex >= 0;
 
   const whiteChip = chipTypes.find((chip) => chip.key === 'white');
   const redChip = chipTypes.find((chip) => chip.key === 'red');
@@ -66,10 +70,16 @@ export default function PositionBoard({ tournamentState, onHide }) {
       </div>
 
       <div className="positions-grid position-markers-grid">
-        {tournamentState.players.map((player) => {
-          const dealer = isDealerPosition(player.currentPosition);
-          const smallBlind = isSmallBlindPosition(player.currentPosition);
-          const bigBlind = player.currentPosition === 'Big Blind';
+        {tournamentState.players.map((player, playerIndex) => {
+          const dealer = Number.isInteger(tournamentState.dealerIndex)
+            ? playerIndex === tournamentState.dealerIndex
+            : isDealerPosition(player.currentPosition);
+          const smallBlind = hasSmallBlindIndex
+            ? playerIndex === tournamentState.smallBlindIndex
+            : isSmallBlindPosition(player.currentPosition);
+          const bigBlind = hasBigBlindIndex
+            ? playerIndex === tournamentState.bigBlindIndex
+            : player.currentPosition === 'Big Blind';
           const firstToAct = player.id === firstToActPlayerId;
           const folded = Boolean(tournamentState.handState?.folded?.[player.id]);
           const showFold = !isPreflop && folded;

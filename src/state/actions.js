@@ -54,6 +54,8 @@ export function startTournamentFromSetup({
     currentPot: 0,
     roundNumber: 1,
     dealerIndex: initialDealerIndex,
+    smallBlindIndex: -1,
+    bigBlindIndex: -1,
     timerRunning: false,
     levelEndsAt: null,
     handState: null,

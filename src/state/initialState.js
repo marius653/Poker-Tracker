@@ -13,6 +13,8 @@ export function createInitialTournamentState() {
     currentPot: 0,
     roundNumber: 1,
     dealerIndex: -1,
+    smallBlindIndex: -1,
+    bigBlindIndex: -1,
     handState: null,
     handRankingsOpen: false,
     cardImageOpen: false,
